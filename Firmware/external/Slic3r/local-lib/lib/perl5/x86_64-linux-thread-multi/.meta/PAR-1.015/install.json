@@ -1,0 +1,1 @@
+{"dist":"PAR-1.015","provides":{"PAR::Heavy":{"version":"0.12","file":"lib/PAR/Heavy.pm"},"PAR":{"version":"1.015","file":"lib/PAR.pm"},"PAR::SetupProgname":{"version":"1.002","file":"lib/PAR/SetupProgname.pm"},"PAR::SetupTemp":{"version":"1.002","file":"lib/PAR/SetupTemp.pm"}},"pathname":"R/RS/RSCHUPP/PAR-1.015.tar.gz","target":"PAR","version":"1.015","name":"PAR"}

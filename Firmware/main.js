@@ -4,6 +4,7 @@ const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const url = require('url');
 const settings = require('./dlprinter.config.json');
+const ipc = electron.ipcMain;
 
 const express = require('express');
 

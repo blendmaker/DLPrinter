@@ -1,3 +1,15 @@
 {
-    "port" : "8181"
+    "port" : "8181",
+    "res_width" : "1280",
+    "res_height" : "720",
+    "phys_width" : "1280",
+    "phys_height" : "1280",
+    "endstop_idle_state" : "1",
+    "endstop_triggered_state" : "0",
+    "z_max" : "200.1",
+    "z_min_speed" : "2",
+    "z_max_speed" : "15",
+    "z_acceleration" : "300",
+    "z_homing_speed" : "15",
+    "z_steps" : "3200"
 }

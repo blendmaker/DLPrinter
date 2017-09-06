@@ -1,0 +1,1 @@
+{"version":"2.16","target":"threads","pathname":"J/JD/JDHEDDEN/threads-2.16.tar.gz","name":"threads","dist":"threads-2.16","provides":{"threads":{"version":"2.16","file":"lib/threads.pm"}}}
