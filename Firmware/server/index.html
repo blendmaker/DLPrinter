@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <title>DLPrinter Webend</title>
     <script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
@@ -9,8 +10,9 @@
     <link rel="stylesheet" href="./css/bootstrap.min.css" type="text/css"></link>
     <link rel="stylesheet" href="./css/bootstrap-theme.min.css" type="text/css"></link>
     <link rel="stylesheet" href="./css/style.css" type="text/css"></link>
-  </head>
-  <body>
+</head>
+
+<body>
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -23,39 +25,26 @@
                 <a class="navbar-brand" href="#">DLPrinter</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li class="dropdown-header">Nav header</li>
-                            <li><a href="#">Separated link</a></li>
-                            <li><a href="#">One more separated link</a></li>
-                        </ul>
-                    </li>
+                <ul class="nav navbar-nav navbar-main" id="primary-menu">
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="../navbar/">Default</a></li>
-                    <li><a href="../navbar-static-top/">Static top</a></li>
-                    <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>
+                <ul class="nav navbar-nav navbar-right" id="secondary-menu">
                 </ul>
-            </div><!--/.nav-collapse -->
+            </div>
+            <!--/.nav-collapse -->
         </div>
     </nav>
 
     <div class="container">
         <div class="content-element" id="general">
-
+            <h1>This page will carry the main Printer options</h1>
+        </div>
+        <div class="content-element" id="printing">
+            <h1>Currently there is no print going on</h1>
         </div>
         <div class="content-element" id="settings">
-
+            <h1>You may change settings right here</h1>
         </div>
     </div>
-  </body>
+</body>
+
 </html>

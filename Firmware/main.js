@@ -7,44 +7,51 @@ const settings = require('./dlprinter.config.json');
 const ipc = electron.ipcMain;
 
 const express = require('express');
+const WebSocket = require('ws');
 
 let mainWindow;
 let expp; // Express app object
+let ws; // Websocket object
 
 function init() {
-  createServer();
-  createWindow();
+    createWebsocket();
+    createServer();
+    createWindow();
 }
 
-function createServer () {
-  expp = express();
-  expp.use(express.static(path.join(__dirname, 'server')));
-  expp.listen(settings.port, function(){ console.log('Express listening on ' + settings.port); });
+function createWebsocket() {
+    ws = new WebSocket.Server({ port: settings.websocket_port });
 }
 
-function createWindow () {
-  mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 720,
-    autoHideMenuBar: true,
-    useContentSize: true,
-    resizable: false,
-  })
-  //mainWindow.setFullScreen(true);
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'projector', 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+function createServer() {
+    expp = express();
+    expp.use(express.static(path.join(__dirname, 'server')));
+    expp.listen(settings.port, function() { console.log('Express listening on ' + settings.port); });
+}
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function () { mainWindow = null })
+function createWindow() {
+    mainWindow = new BrowserWindow({
+        width: 1280,
+        height: 720,
+        autoHideMenuBar: true,
+        useContentSize: true,
+        resizable: false,
+    });
+    //mainWindow.setFullScreen(true);
+    mainWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'projector', 'index.html'),
+        protocol: 'file:',
+        slashes: true
+    }));
+
+    // Emitted when the window is closed.
+    mainWindow.on('closed', function() { mainWindow = null })
 }
 
 // Electron-quick-start template functions
 app.on('ready', init)
-app.on('window-all-closed', function () { if (process.platform !== 'darwin') { app.quit() } })
-app.on('activate', function () { if (mainWindow === null) { createWindow() } })
+app.on('window-all-closed', function() { if (process.platform !== 'darwin') { app.quit() } })
+app.on('activate', function() { if (mainWindow === null) { createWindow() } })
 
 
 /*

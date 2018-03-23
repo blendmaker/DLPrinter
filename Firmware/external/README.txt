@@ -1,2 +1,1 @@
- 
 Slic3r goes into this directory so the App may access "./external/Slic3r/Slic3r"
