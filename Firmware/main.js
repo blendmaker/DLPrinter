@@ -7,25 +7,39 @@ const settings = require('./dlprinter.config.json');
 const ipc = electron.ipcMain;
 
 const express = require('express');
-const WebSocket = require('ws');
+const expressWs = require('express-ws');
 
 let mainWindow;
 let expp; // Express app object
-let ws; // Websocket object
+//let ws; // Websocket object
+let svg = false;
 
 function init() {
-    createWebsocket();
     createServer();
     createWindow();
 }
 
-function createWebsocket() {
-    ws = new WebSocket.Server({ port: settings.websocket_port });
-}
-
 function createServer() {
     expp = express();
+    //ws = expressWs(expp);
+    expressWs(expp);
+
+    expp.ws('/', function(ws, req){
+        ws.on('message', function(msg){
+            let d = JSON.parse(msg);
+
+            if (d.cmd == 'color') {
+                mainWindow.webContents.send(d.color);
+            } else if (d.cmd == 'layer') {
+
+            } else if (d.cmd == 'text') {
+                mainWindow.webContents.send(d.cmd, { 'msg' : d.text });
+            }
+        });
+    });
+
     expp.use(express.static(path.join(__dirname, 'server')));
+    expp.get('/settings', function(req, res){ res.send(settings); });
     expp.listen(settings.port, function() { console.log('Express listening on ' + settings.port); });
 }
 
@@ -43,10 +57,15 @@ function createWindow() {
         protocol: 'file:',
         slashes: true
     }));
-
+    
     // Emitted when the window is closed.
-    mainWindow.on('closed', function() { mainWindow = null })
+    mainWindow.on('closed', function() { mainWindow = null;  })
 }
+
+ipc.on('input', function(e,a){
+    /*mainWindow.webContents.send('white');
+    mainWindow.webContents.send('text', { 'msg' : 'Das ist ein Test'});*/
+});
 
 // Electron-quick-start template functions
 app.on('ready', init)

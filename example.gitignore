@@ -1,2 +1,3 @@
+./Firmware/external/Slic3r
 ./Firmware/node_modules
 ./Firmware/external/*
