@@ -14,7 +14,7 @@ var app = {
     currentlyPrinting: false,
 
     init: function() {
-        app.ws = new WebSocket('ws://' + window.location.host);
+        //app.ws = new WebSocket('ws://' + window.location.host);
         app.pages.forEach(function(nav, i) {
             for (let k in nav) {
                 let menu = i == 0 ? '#primary-menu' : '#secondary-menu';
@@ -28,17 +28,88 @@ var app = {
             }
         });
 
+        // build settings form
+        $.each(app.settings, function(k, v){
+            $('form#form-settings').append($('<label>', {
+                text : v.name,
+                class : 'col-sm-2 col-xs-8',
+                attr : {  'for' : k, },
+            })).append($('<input>', {
+                type : 'text',
+                name : k,
+                class : 'col-sm-2 col-xs-4' ,
+                style : 'text-align: right',
+                value : v.value,
+                id : k,
+                attr : {
+                    'data-toggle' : 'tooltip',
+                    'data-html' : 'true',
+                    'title' : v.description,
+                },
+            }));
+        });
+        $('form#form-settings').append($('<div>', { class : 'w-100' }));
+        $('form#form-settings').append($('<button>', { 
+            text : 'save',
+            class : 'btn btn-primary',
+            type : 'submit',
+            id : 'save-settings',
+        }));
+        $('form#form-settings').submit(function(e){
+            e.preventDefault();
+            e.stopPropagation();
+
+            // build new settingsobject from inputs
+            let tmpSettings = {};
+            $(this).find('label').each(function(){
+                tmpSettings[$(this).attr('for')] = {
+                    'value' : $('input[name="' + $(this).attr('for') + '"]').val(),
+                    'name' : $(this).text(),
+                    'description' : $('input[name="' + $(this).attr('for') + '"]').attr('data-original-title'),
+                };
+            });
+            app.sendMain({ 'cmd' : 'settings', 'settings' : tmpSettings });
+        });
+
+        $('input[data-toggle="tooltip"]').tooltip({ 'trigger' : 'focus' });
+
+        // debug stuff
         $('button').click(function(e){
             if ($(this).attr('id') == 'white' || $(this).attr('id') == 'black') {
-                app.ws.send(JSON.stringify({ 'cmd' : 'color', 'color' : $(this).attr('id') }));
+                app.sendMain({ 'cmd' : 'color', 'color' : $(this).attr('id') });
             } else if ($(this).attr('id') == 'text') {
-                app.ws.send(JSON.stringify({ 'cmd' : 'text', 'text' : 'Hello world!' }));
+                app.sendMain({ 'cmd' : 'text', 'text' : 'Hello world!' });
             } else if ($(this).attr('id') == 'layer') {
-                app.ws.send(JSON.stringify({ 'cmd' : 'layer' }));
+                app.sendMain('layer');
             }
         });
 
         app.navigate();
+    },
+
+    sendMain: function(msg) {
+        // https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/readyState
+        const WsReadyState = {
+            CONNECTING : 0,
+            OPEN : 1,
+            CLOSING : 2,
+            CLOSED : 3,
+        };
+
+        if (!app.ws || app.ws.readyState == WsReadyState.CLOSED) {
+            app.ws = new WebSocket('ws://' + window.location.host);
+            app.ws.onclose = function(e){
+                $('#lifesign').removeClass('alive');
+            };
+        }
+        if (typeof msg == 'string') {
+            msg = { 'cmd' : msg };
+        }
+        if (app.ws.readyState == WsReadyState.OPEN) {
+            app.ws.send(JSON.stringify(msg));
+            $('#lifesign').addClass('alive');
+        }
+        return app.ws.readyState == WsReadyState.OPEN;
     },
 
     navigate: function(e) {
@@ -59,10 +130,6 @@ $(document).ready(function() {
 
     setInterval(function(){
         // send heartbeat
-        if (app.ws.readyState == 'OPEN') {
-            app.ws.send("{ 'cmd':'heartbeat'}");
-        } else if (app.ws.readyState == 'CLOSED') {
-            app.ws.open();
-        }
+        app.sendMain('heartbeat');
     }, 1000);
 });

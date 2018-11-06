@@ -13,14 +13,13 @@
   "author": "Blender a 3D enthusiast",
   "license": "WTFPL",
   "devDependencies": {
-    "electron": "^3"
+    "electron": "^3.0.6"
   },
   "dependencies": {
     "d3": "^5.7.0",
     "express": "^4.16",
     "express-ws": "^4.0.0",
-    "svg.js": "^2.6.6",
-    "ws": "^6.1.0"
+    "xml2js": "^0.4.19"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.0",
