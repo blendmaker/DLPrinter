@@ -76,4 +76,9 @@ document.addEventListener('DOMContentLoaded', function(){
     pixelHeight = svg.node().getBoundingClientRect().height;
     pixelWidth = svg.node().getBoundingClientRect().width;
     gScale.attr('transform', "scale(" + parseFloat(pixelWidth/settings.phys_width.value).toFixed(3) + " " + parseFloat(pixelHeight/settings.phys_height.value).toFixed(3) + ")");
+
+    setInterval(() => {
+        ipc.send('message', 'i am alive!');
+        ipc.send('message', { msg: 'i am alive!'});
+    }, 2000);
  });

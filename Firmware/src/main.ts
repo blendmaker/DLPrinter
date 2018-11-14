@@ -11,10 +11,12 @@ import { format as urlFormat } from 'url';
 //import { Router as wsRouter } from 'express-ws';
 import * as expressWs from 'express-ws';
 import * as express from 'express';
+import { IpcMainSubject } from './IpcSubjects'
 
 const expApp = express();
 const settings = new Settings(app.getPath('userData'));
 const printRunner = new PrintRunner(settings, layerCallback);
+const ipc = new IpcMainSubject(ipcMain);
 
 let mainWindow : BrowserWindow;
 
