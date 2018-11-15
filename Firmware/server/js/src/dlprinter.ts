@@ -1,4 +1,4 @@
-var app = {
+/*var app = {
     pages: [{
             'general': 'General',
             'printing': 'Printing',
@@ -8,7 +8,7 @@ var app = {
             'logout': 'Logout',
         }
     ],
-    ws: false,
+    ws: null,
     settings: false,
     currentPage: 'general',
     currentlyPrinting: false,
@@ -112,7 +112,7 @@ var app = {
         return app.ws.readyState == WsReadyState.OPEN;
     },
 
-    navigate: function(e) {
+    navigate: function(e?: any) {
         let hash = (window.location.hash.length == 0) ? ('#' + Object.keys(app.pages[0])[0]) : window.location.hash;
         $('.navbar-nav li').removeClass('active');
         $('a[href="' + hash + '"]').parent().addClass('active');
@@ -132,4 +132,4 @@ $(document).ready(function() {
         // send heartbeat
         app.sendMain('heartbeat');
     }, 1000);
-});
+});*/

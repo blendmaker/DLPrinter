@@ -1,3 +1,3 @@
-export interface ipcCommandInterface {
-    
+export abstract class ipcCommandInterface {
+    protected _data: any;
 }
