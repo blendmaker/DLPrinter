@@ -3,3 +3,6 @@ Firmware/node_modules
 Firmware/external/*
 Firmware/package-lock.json
 Firmware/dist/
+Firmware/server/dist
+Firmware/server/dlprinter/node_modules
+Firmware/server/Backup

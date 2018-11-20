@@ -49,7 +49,7 @@ function setupServer() {
         });
     });
 
-    expApp.use(express.static(path.join(__dirname, '..', 'server')));
+    expApp.use(express.static(path.join(__dirname, '..', 'server', 'dist')));
     expApp.get('/settings', function(req:any, res:any){ res.send(settings.getSettingsData()); });
     expApp.listen(settings.getSettingsData().port.value, function() { console.log('Express listening on ' + settings.getSettingsData().port.value); });
 }
