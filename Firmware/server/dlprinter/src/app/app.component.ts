@@ -7,10 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
   title = 'dlprinter';
-  ws: WebSocket;
+  // ws: WebSocket;
 
   ngOnInit(): void {
-    this.ws = new WebSocket('ws://' + window.location.host);
-    
+    // this.ws = new WebSocket('ws://' + window.location.host);
   }
 }

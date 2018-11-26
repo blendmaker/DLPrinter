@@ -3,9 +3,10 @@
   "version": "0.0.1-prealpha",
   "description": "An Electron application to project models onto a DLP Printer",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -w",
+    "build-projector": "tsc -w -p ./projector/tsconfig.json",
     "watch": "tsc -w",
-    "start": "npm run build && electron ./dist/main.js"
+    "start": "npm run build && npm run build-projector && electron ./dist/main.js"
   },
   "repository": "https://github.com/blendmaker/DLPrinter",
   "keywords": [

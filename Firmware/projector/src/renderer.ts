@@ -1,5 +1,4 @@
 import { ipcRenderer as ipc } from 'electron';
-//const d3 = require('d3');
 import * as d3 from 'd3';
 const settings = require('../dlprinter.config.json');
 const gPos = d3.select('g#posHolder');

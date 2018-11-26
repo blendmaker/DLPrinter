@@ -1,3 +1,5 @@
+import { app } from "electron";
+
 export class Settings {
     private _data: object;
     private _fs = require('fs');
@@ -5,6 +7,7 @@ export class Settings {
     
     constructor(private homeDir: string, clearToDefaults: boolean = false) {
         let fExists : boolean = false;
+        
         try {
             this._fs.statSync(homeDir + '/dlprinter.config.json');
             fExists = true;
