@@ -11,7 +11,7 @@ import * as express from 'express';
 import { IpcMainSubject } from './IpcSubjects'
 
 const expApp = express();
-const settings = new Settings(app.getPath('userData'));
+const settings = new Settings();
 const printRunner = new PrintRunner(settings, layerCallback);
 const ipc = new IpcMainSubject(ipcMain);
 

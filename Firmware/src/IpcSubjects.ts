@@ -1,12 +1,12 @@
 import { BehaviorSubject, Observer } from 'rxjs'
-import { IpcMain, IpcRenderer } from 'electron'
+import { ipcRenderer, ipcMain } from 'electron'
 
 export class IpcMainSubject extends BehaviorSubject<object> {
-    private _sendFunc: (channel: string, msg: any)=>void;
+    //private _sendFunc: (channel: string, msg: any)=>void;
 
-    constructor (private ipc: IpcMain) {
+    constructor (private _sendFunc: (channel: string, msg: any)=>void) {
         super({});
-        ipc.on('message', (e:Event, args:string) => {
+        ipcMain.on('message', (e:Event, args:string) => {
             this.next(JSON.parse(args));
         });
     }
@@ -24,9 +24,9 @@ export class IpcMainSubject extends BehaviorSubject<object> {
 }
 
 export class IpcRendererSubject extends BehaviorSubject<any> {
-    constructor (private ipc: IpcRenderer) {
-        super('');
-        ipc.on('message', (e:Event, args: string) => {
+    constructor () {
+        super({});
+        ipcRenderer.on('message', (e:Event, args: string) => {
             this.next(JSON.parse(args));
         });
     }
@@ -34,6 +34,7 @@ export class IpcRendererSubject extends BehaviorSubject<any> {
     send(object: any) {
         if (typeof object !== 'string') {
             object = JSON.stringify(object);
+            ipcRenderer.send('message', object);
         }
     }
 }

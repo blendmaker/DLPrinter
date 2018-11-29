@@ -1,15 +1,33 @@
-import { ipcRenderer as ipc } from 'electron';
 import * as d3 from 'd3';
-const settings = require('../dlprinter.config.json');
+import { Settings } from '../../src/settings';
+import { IpcRendererSubject } from '../../src/IpcSubjects';
+
+const settings = new Settings();
+const ipc = new IpcRendererSubject();
 const gPos = d3.select('g#posHolder');
 const gScale = d3.select('g#scaleHolder');
 const svg = d3.select('svg#projector');
 const pText = d3.select('p#text');
 
+const phys_width = settings.getSettingsData().phys_width;
+const phys_height = settings.getSettingsData().phys_height;
 let pixelHeight: number;
 let pixelWidth: number;
 
-ipc.on("black",    black);
+ipc.subscribe((msg: any) => {
+    if (typeof msg === 'string') {
+        msg = JSON.parse(msg);
+    }
+    switch (msg.cmd) {
+        case 'black': black(msg); break;
+        case 'white': white(msg); break;
+        case 'text': text(msg); break;
+        case 'svg-layer': svgLayer(msg); break;
+        case 'center': center(msg); break;
+    }
+});
+
+/*ipc.on("black",    black);
 ipc.on("white",    white);
 ipc.on("text",     text);
 
@@ -18,16 +36,16 @@ ipc.on("center",   center);
 ipc.on("start",    start);
 ipc.on("pause",    pause);
 ipc.on("resume",   resume);
-ipc.on("stop",     stop);
+ipc.on("stop",     stop);*/
 
-function svgLayer(e:Event, a:any){
+function svgLayer(a:any){
     gScale.html(a.layer);
 }
 
-function center(e:Event, a:any) {
+function center(a:any) {
     // transform half the object size to pixel
-    const pixelPerMmX = pixelWidth/settings.phys_width.value;
-    const pixelPerMmY = pixelHeight/settings.phys_height.value;
+    const pixelPerMmX = pixelWidth/phys_width;
+    const pixelPerMmY = pixelHeight/phys_height;
     const cX = pixelWidth/2;
     const cY = pixelHeight/2;
     const pX = (cX-(pixelPerMmX*(a.w/2))).toFixed(3);
@@ -36,50 +54,47 @@ function center(e:Event, a:any) {
     gPos.attr('transform', "translate(" + pX + " " + pY + ")");
 }
 
-function black(e:Event, a:any){
+function black(a:any){
     svg.style('background-color', 'black');
     pText.style('color', 'white');
     pText.html("");
     gScale.html("");
 }
 
-function white(e:Event, a:any){
+function white(a:any){
     svg.style('background-color', 'white');
     pText.style('color', 'black');
     pText.html("");
     gScale.html("");
 }
 
-function text(e:Event, a:any){
+function text(a:any){
     pText.html(a.msg);
 }
 
-function start(e:Event, a:any){
+/*function start(a:any){
     
 }
 
-function pause(e:Event, a:any){
+function pause(a:any){
     
 }
 
-function resume(e:Event, a:any){
+function resume(a:any){
     
 }
 
-function stop(e:Event, a:any){
+function stop(a:any){
     
-}
+}*/
 
 document.addEventListener('DOMContentLoaded', function(){
     // apply scaling
-    console.log(svg.node());
-    console.log(svg.node().constructor.name);
     //pixelHeight = svg.node().getBoundingClientRect().height;
     //pixelWidth = svg.node().getBoundingClientRect().width;
-    gScale.attr('transform', "scale(" + (pixelWidth/settings.phys_width.value).toFixed(3) + " " + (pixelHeight/settings.phys_height.value).toFixed(3) + ")");
-
-    setInterval(() => {
-        ipc.send('message', 'i am alive!');
-        ipc.send('message', { msg: 'i am alive!'});
-    }, 2000);
+    console.log(svg.node());
+    console.log(svg.node().constructor.name);
+    gScale.attr('transform', "scale(" + 
+        (pixelWidth/phys_width).toFixed(3) + " " + 
+        (pixelHeight/phys_height).toFixed(3) + ")");
  });
