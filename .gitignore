@@ -6,3 +6,5 @@ Firmware/dist/
 Firmware/server/dist
 Firmware/server/dlprinter/node_modules
 Firmware/server/Backup
+*/.DS_Store
+.DS_Store
