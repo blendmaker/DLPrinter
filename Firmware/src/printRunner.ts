@@ -1,11 +1,14 @@
-import { Settings } from './settings'
+import { Settings } from './Settings'
 import { Builder, parseString } from 'Xml2js'
 import { readFileSync } from 'fs';
+import { from } from 'rxjs';
 
 export class PrintRunner {
     private svg: string;
     private layers: string[];
     private _isPrinting: boolean = false;
+    private _zPos: 0.00;
+    private _light: false;
     private builder = new Builder();
 
     constructor(private settings: Settings, private layerCallback: (layer: string) => void) {
@@ -23,7 +26,11 @@ export class PrintRunner {
                 console.log(err);
                 return;
             }
-            this.layers = data.svg.g;
+            //this.layers = data.svg.g;
+            from(data.svg.g).subscribe( (l) => {
+                this.layers.push( this.builder.buildObject(l).replace('<root', '<g').replace('</root', '</g') )
+            } );
+            console.log(this.layers);
             result.width = data.svg.$.width;
             result.height = data.svg.$.height;
         });
@@ -36,7 +43,7 @@ export class PrintRunner {
     public requestLayer(layerNumber: number) {
         if (this.svg == undefined) {
             throw new Error('no file loaded'); }
-        if (this.layers.length < 1) {
+        else if (this.layers.length < 1) {
             throw new Error('no layers to print left in queue'); }
         this.layerCallback(this.layers[layerNumber]);
     }
@@ -51,13 +58,13 @@ export class PrintRunner {
         this._isPrinting = true;
     }
 
-    /**
-     * isPrinting
-     */
-    public isPrinting():boolean {
-        return this._isPrinting;
+    public getState() {
+        return {
+            printing : this._isPrinting,
+            z : this._zPos,
+            light : this._light,
+        }
     }
-
  
     /*
     function loadSvg(fn: string) {

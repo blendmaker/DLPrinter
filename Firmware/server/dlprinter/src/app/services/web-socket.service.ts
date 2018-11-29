@@ -1,28 +1,39 @@
 import { Injectable } from '@angular/core';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, interval } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { WebSocketSubject } from 'rxjs/observable/dom/WebSocketSubject';
 
 @Injectable({
   providedIn: 'root'
 })
-export class WebSocketService extends BehaviorSubject<string> {
+export class WebSocketService extends BehaviorSubject<any> {
   private wsUrl = environment.wsUrl;
-  // private wsUrl = 'wss://echo.websocket.org';
-  private wsSubject: WebSocketSubject<string>;
+  private ws: WebSocket;
+  private status: any;
 
   constructor() {
-    super('');
-    this.wsSubject = new WebSocketSubject(this.wsUrl);
-    this.wsSubject.subscribe((data) => console.log(data));
-    this.wsSubject.next('ich bin mal ein Test');
-    console.log(environment.wsUrl);
-    // this.ws = new WebSocket(environment.wsUrl);
+    super({});
+    this.connect();
   }
 
-  private connect() {
-    if (! this.wsSubject || this.wsSubject.closed || this.wsSubject.isStopped) {
-      //this.wsSubject.
+  public next(message: string|any): boolean {
+    if (typeof message !== 'string') {
+      message = JSON.stringify(message);
     }
+    if (this.connect()) {
+      this.ws.send(message);
+      return true;
+    }
+    return false;
+  }
+
+  public getValue() {
+    return this.status;
+  }
+
+  private connect(): boolean {
+    if (! this.ws || this.ws.readyState !== this.ws.OPEN) {
+      this.ws = new WebSocket(this.wsUrl);
+    }
+    return this.ws.readyState === this.ws.OPEN;
   }
 }

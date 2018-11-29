@@ -1,7 +1,7 @@
 import {app, BrowserWindow, ipcMain} from 'electron'
 import * as path from 'path'
-import { Settings } from './settings'
-import { PrintRunner } from './printRunner'
+import { Settings } from './Settings'
+import { PrintRunner } from './PrintRunner'
 
 import { format as urlFormat } from 'url';
 //import * as Xml2Js from 'xml2js';
@@ -20,6 +20,8 @@ let mainWindow : BrowserWindow;
 function init() {
     setupServer();
     setupWindow();
+
+    console.log(app.getPath('userData'));
 }
 
 function layerCallback(currentLayer: string) {
@@ -27,6 +29,7 @@ function layerCallback(currentLayer: string) {
 }
 
 function setupServer() {
+    // TODO 3 of 4 communication parts went to other classes... a better approach for this? invest...
     expressWs(expApp).app.ws('/', (ws, req: express.Request) => {
         ws.on('message', (input:string) => {
             let msg = JSON.parse(input);
@@ -35,13 +38,15 @@ function setupServer() {
                 mainWindow.webContents.send(msg.color);
             } else if (msg.cmd == 'layer') {
                 let svgSize =
-                    printRunner.loadSvg(app.getPath('userData') + '/example_cube.svg');
+                    printRunner.loadSvg(app.getPath('userData') + '/files/svgs/example_cube.svg');
                 mainWindow.webContents.send('center', { 'w' : svgSize.width, 'h' : svgSize.height });
                 printRunner.startPrint();
             } else if (msg.cmd == 'text') {
                 mainWindow.webContents.send(msg.cmd, { 'msg' : msg.text });
             } else if (msg.cmd == 'settings') {
                 settings.setSettingsData(msg.settings);
+            } else if (msg.cmd == 'heartbeat') {
+                ws.send(JSON.stringify(printRunner.getState()));
             }
         });
     });
@@ -68,7 +73,7 @@ function setupWindow() {
     
     // Emitted when the window is closed.
     mainWindow.on('closed', function() { mainWindow = undefined; })
-    
+    ipc.setSendFunc(mainWindow.webContents.send);
 }
 
 //ipcMain.on('input', function(e:Event,a:any){

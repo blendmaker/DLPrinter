@@ -1,0 +1,14 @@
+span {
+    white-space: nowrap;
+}
+i.fa-signal {
+    color: maroon;
+    &.connected {
+        color: aquamarine;
+    }
+}
+i.fa-lightbulb-o {
+    &.on {
+        color: blueviolet;
+    }
+}

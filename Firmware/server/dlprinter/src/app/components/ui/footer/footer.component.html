@@ -1,5 +1,11 @@
 <nav class="navbar navbar-dark bg-dark mt-5 fixed-bottom">
   <div class="navbar-expand m-auto navbar-text">
-    Made with <i class="fa fa-heart"></i> by <a href="https://twitter.com/beeman_nl">beeman</a>
+    <span>Websocket: <i class="fa fa-signal" [ngClass]="connected?'connected':''" [ngbTooltip]="tooltipConnection[connected?0:1]"></i></span>
+    &nbsp;|&nbsp;
+    <span>Printrunning: <i class="fa" [ngClass]="printerStatus.printing?'fa-play':'fa-pause'" ngbTooltip="Overall status of the printer"></i></span>
+    &nbsp;|&nbsp;
+    <span>z: {{ printerStatus.z | number:'1.2-2' }}mm </span>
+    &nbsp;|&nbsp;
+    <span>light: <i class="fa fa-lightbulb-o" [ngClass]="printerStatus.light?'on':''"></i></span>
   </div>
 </nav>

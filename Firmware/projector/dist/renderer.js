@@ -1,7 +1,6 @@
 "use strict";
 exports.__esModule = true;
 var electron_1 = require("electron");
-//const d3 = require('d3');
 var d3 = require("d3");
 var settings = require('../dlprinter.config.json');
 var gPos = d3.select('g#posHolder');

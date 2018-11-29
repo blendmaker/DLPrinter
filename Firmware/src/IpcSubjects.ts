@@ -3,6 +3,7 @@ import { IpcMain, IpcRenderer } from 'electron'
 
 export class IpcMainSubject extends BehaviorSubject<object> {
     private _sendFunc: (channel: string, msg: any)=>void;
+
     constructor (private ipc: IpcMain) {
         super({});
         ipc.on('message', (e:Event, args:string) => {
@@ -22,7 +23,7 @@ export class IpcMainSubject extends BehaviorSubject<object> {
     }
 }
 
-export class IpcRendererSubject extends BehaviorSubject<string> {
+export class IpcRendererSubject extends BehaviorSubject<any> {
     constructor (private ipc: IpcRenderer) {
         super('');
         ipc.on('message', (e:Event, args: string) => {
