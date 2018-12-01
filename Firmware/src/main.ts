@@ -1,25 +1,23 @@
-import {app, BrowserWindow, ipcMain} from 'electron'
+import {app, BrowserWindow, ipcMain, IpcMessageEvent} from 'electron'
 import * as path from 'path'
 import { Settings } from './Settings'
 import { PrintRunner } from './PrintRunner'
-
 import { format as urlFormat } from 'url';
-//import * as Xml2Js from 'xml2js';
-
 import * as expressWs from 'express-ws';
 import * as express from 'express';
-import { IpcMainSubject } from './IpcSubjects'
+import { IpcMainSubject, IpcMessageInterface } from './IpcSubjects'
 
 const expApp = express();
 const settings = new Settings();
 const printRunner = new PrintRunner(settings, layerCallback);
-const ipc = new IpcMainSubject(ipcMain);
+let ipc;
 
 let mainWindow : BrowserWindow;
 
 function init() {
     setupServer();
     setupWindow();
+    setupIpc();
 
     console.log(app.getPath('userData'));
 }
@@ -43,7 +41,9 @@ function setupServer() {
                 printRunner.startPrint();
             } else if (msg.cmd == 'text') {
                 mainWindow.webContents.send(msg.cmd, { 'msg' : msg.text });
-            } else if (msg.cmd == 'settings') {
+            } else if (msg.cmd == 'get-settings') {
+                ws.send(settings.getSettingsData());
+            } else if (msg.cmd == 'set-settings') {
                 settings.setSettingsData(msg.settings);
             } else if (msg.cmd == 'heartbeat') {
                 ws.send(JSON.stringify(printRunner.getState()));
@@ -52,8 +52,9 @@ function setupServer() {
     });
 
     expApp.use(express.static(path.join(__dirname, '..', 'server', 'dist')));
-    expApp.get('/settings', function(req:any, res:any){ res.send(settings.getSettingsData()); });
-    expApp.listen(settings.getSettingsData().port.value, function() { console.log('Express listening on ' + settings.getSettingsData().port.value); });
+    //expApp.get('/settings', (req:any, res:any) => { res.send(settings.getSettingsData()); });
+    expApp.get('*', (req, res, next) => { res.sendFile(path.join(__dirname, '..', 'server', 'dist', 'index.html')); });
+    expApp.listen(settings.getSettingsData().port, function() { console.log('Express listening on ' + settings.getSettingsData().port); });
 }
 
 function setupWindow() {
@@ -72,14 +73,17 @@ function setupWindow() {
     }));
     
     // Emitted when the window is closed.
-    mainWindow.on('closed', function() { mainWindow = undefined; })
-    ipc.setSendFunc(mainWindow.webContents.send);
+    mainWindow.on('closed', function() { mainWindow = undefined; });
 }
 
-//ipcMain.on('input', function(e:Event,a:any){
-    /*mainWindow.webContents.send('white');
-    mainWindow.webContents.send('text', { 'msg' : 'Das ist ein Test'});*/
-//});
+function setupIpc() {
+    ipc = new IpcMainSubject(mainWindow.webContents.send);
+    ipc.subscribe((msg: IpcMessageInterface) => {
+        switch (msg.cmd) {
+            case 'asdf' : break;
+        }
+    });
+}
 
 // Electron-quick-start template functions
 app.on('ready', init)

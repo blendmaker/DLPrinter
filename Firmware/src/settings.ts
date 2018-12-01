@@ -1,7 +1,7 @@
 import { app } from "electron";
 
 export class Settings {
-    private _data: object;
+    private _data: SettingsData;
     private _fs = require('fs');
     private _homeDir: string;
     
@@ -28,14 +28,28 @@ export class Settings {
     }
 
     // TODO error handling when folder not writeable
-    public setSettingsData(data: any, saveToDisk: boolean = true) {
+    public setSettingsData(data: SettingsData, saveToDisk: boolean = true) {
         this._data = data;
         if (saveToDisk) {
             this._fs.writeFileSync(this._homeDir + '/dlprinter.config.json', JSON.stringify(data, null, 2));
         }
     }
 
-    public getSettingsData():any {
+    public getSettingsData():SettingsData {
         return this._data;
     }
+}
+
+export interface SettingsData {
+    port: number;
+    phys_width: number;
+    phys_height: number;
+    endstop_idle_state: string|number;
+    endstop_triggered_state: string|number;
+    z_max: number;
+    z_min_speed: number;
+    z_max_speed: number;
+    z_acceleration: number;
+    z_steps: number;
+    security: boolean;
 }

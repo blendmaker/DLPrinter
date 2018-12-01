@@ -1,40 +1,35 @@
-import { BehaviorSubject, Observer } from 'rxjs'
+import { Subject } from 'rxjs'
 import { ipcRenderer, ipcMain } from 'electron'
 
-export class IpcMainSubject extends BehaviorSubject<object> {
-    //private _sendFunc: (channel: string, msg: any)=>void;
-
+export class IpcMainSubject extends Subject<IpcMessageInterface> {
     constructor (private _sendFunc: (channel: string, msg: any)=>void) {
-        super({});
+        super();
         ipcMain.on('message', (e:Event, args:string) => {
             this.next(JSON.parse(args));
         });
     }
 
-    public setSendFunc(func: (channel: string, msg: any)=>void) {
-        this._sendFunc = func;
-    }
-
-    public send(msg: string|any) {
-        if (typeof msg !== 'string') {
-            msg = JSON.stringify(msg);
-        }
+    public send(message: IpcMessageInterface) {
+        const msg = JSON.stringify(message);
         this._sendFunc('message', msg);
     }
 }
 
-export class IpcRendererSubject extends BehaviorSubject<any> {
+export class IpcRendererSubject extends Subject<IpcMessageInterface> {
     constructor () {
-        super({});
+        super();
         ipcRenderer.on('message', (e:Event, args: string) => {
             this.next(JSON.parse(args));
         });
     }
 
-    send(object: any) {
-        if (typeof object !== 'string') {
-            object = JSON.stringify(object);
-            ipcRenderer.send('message', object);
-        }
+    send(message: IpcMessageInterface) {
+        const msg = JSON.stringify(message);
+        ipcRenderer.send('message', msg);
     }
+}
+
+export interface IpcMessageInterface {
+    cmd: '' | 'asdf' ;
+    data: any;
 }

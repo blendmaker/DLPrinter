@@ -1,7 +1,8 @@
 import { Settings } from './Settings'
 import { Builder, parseString } from 'Xml2js'
-import { readFileSync } from 'fs';
-import { from } from 'rxjs';
+import * as fs from 'fs';
+import { from, Observable, observable } from 'rxjs';
+import { app } from 'electron';
 
 export class PrintRunner {
     private svg: string;
@@ -10,9 +11,23 @@ export class PrintRunner {
     private _zPos: 0.00;
     private _light: false;
     private builder = new Builder();
+    private svgDir = app.getPath('user_data') + '/svg';
+    private modelDir = app.getPath('user_data') + '/svg';
+    
 
-    constructor(private settings: Settings, private layerCallback: (layer: string) => void) {
+    constructor(private layerCallback: (layer: string) => void) {
+        // check for existence of svg/stl folders
+        if (! fs.existsSync(this.svgDir)) { fs.mkdirSync(this.svgDir); }
+        if (! fs.existsSync(this.modelDir)) { fs.mkdirSync(this.modelDir); }
+    }
 
+    public getLocalFiles(): Observable<any> {
+        const result = Observable.create((observable: Observable<string[]>) => {
+            fs.readdir(this.svgDir, (err: any, files: string[]) => {
+                observable.next(files);
+            });
+        });
+        return result;
     }
 
     /**
@@ -20,13 +35,12 @@ export class PrintRunner {
      */
     public loadSvg(filename: string): { width:number, height:number} {
         let result = { width:0, height:0 };
-        let xml = readFileSync(filename);
+        let xml = fs.readFileSync(filename);
         parseString(xml, (err: object, data:any) => {
             if (err) {
                 console.log(err);
                 return;
             }
-            //this.layers = data.svg.g;
             from(data.svg.g).subscribe( (l) => {
                 this.layers.push( this.builder.buildObject(l).replace('<root', '<g').replace('</root', '</g') )
             } );
@@ -40,12 +54,12 @@ export class PrintRunner {
     /**
      * requestLayer
      */
-    public requestLayer(layerNumber: number) {
+    public requestLayer() {
         if (this.svg == undefined) {
             throw new Error('no file loaded'); }
         else if (this.layers.length < 1) {
             throw new Error('no layers to print left in queue'); }
-        this.layerCallback(this.layers[layerNumber]);
+        this.layerCallback(this.layers[0]);
     }
 
     /**
@@ -56,6 +70,8 @@ export class PrintRunner {
             throw new Error('no file loaded'); }
         
         this._isPrinting = true;
+
+        // how to do that? iterate over simplesteps or do a per layer loop?
     }
 
     public getState() {
