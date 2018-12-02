@@ -1,4 +1,4 @@
-import {app, BrowserWindow, ipcMain, IpcMessageEvent} from 'electron'
+import { app, BrowserWindow } from 'electron'
 import * as path from 'path'
 import { Settings } from './Settings'
 import { PrintRunner } from './PrintRunner'
@@ -9,17 +9,17 @@ import { IpcMainSubject, IpcMessageInterface } from './IpcSubjects'
 
 const expApp = express();
 const settings = new Settings();
-const printRunner = new PrintRunner(settings, layerCallback);
+const printRunner = new PrintRunner(layerCallback);
 let ipc;
 
 let mainWindow : BrowserWindow;
+
+console.log(app.getPath('userData'));
 
 function init() {
     setupServer();
     setupWindow();
     setupIpc();
-
-    console.log(app.getPath('userData'));
 }
 
 function layerCallback(currentLayer: string) {
@@ -35,8 +35,7 @@ function setupServer() {
             if (msg.cmd == 'color') {
                 mainWindow.webContents.send(msg.color);
             } else if (msg.cmd == 'layer') {
-                let svgSize =
-                    printRunner.loadSvg(app.getPath('userData') + '/files/svgs/example_cube.svg');
+                let svgSize = printRunner.loadSvg(app.getPath('userData') + '/files/svgs/example_cube.svg');
                 mainWindow.webContents.send('center', { 'w' : svgSize.width, 'h' : svgSize.height });
                 printRunner.startPrint();
             } else if (msg.cmd == 'text') {

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-dark bg-dark mt-5 fixed-bottom">
   <div class="navbar-expand m-auto navbar-text">
-    <span>Websocket: <i class="fa fa-signal" [ngClass]="connected?'connected':''" [ngbTooltip]="tooltipConnection[connected?0:1]"></i></span>
+    <span>Websocket: <i class="fa fa-signal" [ngClass]="connected?'connected':''" [ngbTooltip]="tooltipConnection[Number(connected)]"></i></span>
     &nbsp;|&nbsp;
     <span>Printrunning: <i class="fa" [ngClass]="printerStatus.printing?'fa-play':'fa-pause'" ngbTooltip="Overall status of the printer"></i></span>
     &nbsp;|&nbsp;

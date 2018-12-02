@@ -14,8 +14,8 @@ export class Settings {
             fExists = true;
         } catch (err) {
             if (err !== null && err.code !== 'ENOENT') {
-                console.log('An error occured when trying to create local settings. Aborting launch.');
-                console.log('Errorcode: ', err.code);
+                console.error('An error occured when trying to create local settings. Aborting launch.');
+                console.error('Errorcode: ', err.code);
             }
         }
 

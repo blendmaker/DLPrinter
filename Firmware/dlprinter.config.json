@@ -1,57 +1,13 @@
 {
-    "port": {
-        "value" : "8181",
-        "name" : "Port",
-        "description" : "The port, the webserver should listen to. Most Linux distributions forbid using ports lower than 1024. Since the server doesn't intend to run with root privileges a local proxy server like <a href=\"http://www.haproxy.org/\" target=\"_blank\">haproxy</a> may be used. Changes take only effect after restart."
-    },
-    "phys_width": {
-        "value" : "154.7",
-        "name" : "Physical width",
-        "description" : "Physical width of projector screen in mm."
-    },
-    "phys_height": {
-        "value" : "85.6",
-        "name" : "Physical height",
-        "description" : "Physical height of projector screen in mm."
-    },
-    "endstop_idle_state": {
-        "value" : "1",
-        "name" : "Endstop idle value",
-        "description" : "Which value does the endstop GPIO pin have when the endstop is not triggered."
-    },
-    "endstop_triggered_state": {
-        "value" : "0",
-        "name" : "Endstop triggered value",
-        "description" : "Which value does the endstop GPIO pin have when the endstop is triggered."
-    },
-    "z_max": {
-        "value" : "200.1",
-        "name" : "Maximum Z height",
-        "description" : "Maximum length from 0mm Z axis to the endstop."
-    },
-    "z_min_speed": {
-        "value" : "2",
-        "name" : "Minimum Z speed",
-        "description" : "The slowest posible travelspeed for Z axis in mm/s."
-    },
-    "z_max_speed": {
-        "value" : "15",
-        "name" : "Maximum Z speed",
-        "description" : "The fastest posible travelspeed for Z axis in mm/s."
-    },
-    "z_acceleration": {
-        "value" : "300",
-        "name" : "Z axis acceleration",
-        "description" : "Acceleration for Z axis in mm/s²."
-    },
-    "z_steps": {
-        "value" : "3200",
-        "name" : "Z axis steps",
-        "description" : "Steps per mm at the Z axis."
-    },
-    "security": {
-        "vaule" : false,
-        "name" : "Userlogin enabaled",
-        "description" : "Enable/Disable login and block the webfrontend until a user has logged in."
-    }
+    "port": "8181",
+    "phys_width": "154.7",
+    "phys_height": "85.6",
+    "endstop_idle_state": "1",
+    "endstop_triggered_state": "0",
+    "z_max": "200.1",
+    "z_min_speed": "2",
+    "z_max_speed": "15",
+    "z_acceleration": "300",
+    "z_steps": "3200",
+    "security": false
 }

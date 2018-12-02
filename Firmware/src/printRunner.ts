@@ -1,7 +1,7 @@
 import { Settings } from './Settings'
 import { Builder, parseString } from 'Xml2js'
 import * as fs from 'fs';
-import { from, Observable, observable } from 'rxjs';
+import { from, Observable, observable, Subscriber } from 'rxjs';
 import { app } from 'electron';
 
 export class PrintRunner {
@@ -11,20 +11,22 @@ export class PrintRunner {
     private _zPos: 0.00;
     private _light: false;
     private builder = new Builder();
-    private svgDir = app.getPath('user_data') + '/svg';
-    private modelDir = app.getPath('user_data') + '/svg';
+    private svgDir = app.getPath('userData') + '/svg';
+    private modelDir = app.getPath('userData') + '/models';
     
 
     constructor(private layerCallback: (layer: string) => void) {
         // check for existence of svg/stl folders
+        console.log(this.modelDir);
+        console.log(fs.existsSync(this.modelDir));
         if (! fs.existsSync(this.svgDir)) { fs.mkdirSync(this.svgDir); }
         if (! fs.existsSync(this.modelDir)) { fs.mkdirSync(this.modelDir); }
     }
 
-    public getLocalFiles(): Observable<any> {
-        const result = Observable.create((observable: Observable<string[]>) => {
+    public getLocalFiles(): Observable<String[]> {
+        const result = Observable.create((subscriber: Subscriber<string[]>) => {
             fs.readdir(this.svgDir, (err: any, files: string[]) => {
-                observable.next(files);
+                subscriber.next(files);
             });
         });
         return result;
