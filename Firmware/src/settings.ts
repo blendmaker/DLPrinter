@@ -3,7 +3,7 @@ import { app } from "electron";
 export class Settings {
     private _data: SettingsData;
     private _fs = require('fs');
-    private _homeDir: string;
+    private _homeDir = app.getPath('userData').replace('Electron', 'DLPrinter');
     
     constructor(clearToDefaults: boolean = false) {
         let fExists : boolean = false;
@@ -37,6 +37,10 @@ export class Settings {
 
     public getSettingsData():SettingsData {
         return this._data;
+    }
+
+    public getHome() {
+        return this._homeDir;
     }
 }
 

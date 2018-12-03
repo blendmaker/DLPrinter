@@ -10,15 +10,15 @@ export class PrintRunner {
     private _isPrinting: boolean = false;
     private _zPos: 0.00;
     private _light: false;
+    private _settings = new Settings();
     private builder = new Builder();
-    private svgDir = app.getPath('userData') + '/svg';
-    private modelDir = app.getPath('userData') + '/models';
-    
+    private svgDir: string;
+    private modelDir: string;
 
     constructor(private layerCallback: (layer: string) => void) {
         // check for existence of svg/stl folders
-        console.log(this.modelDir);
-        console.log(fs.existsSync(this.modelDir));
+        this.modelDir = this._settings.getHome() + '/models';
+        this.svg = this._settings.getHome() + '/svg';
         if (! fs.existsSync(this.svgDir)) { fs.mkdirSync(this.svgDir); }
         if (! fs.existsSync(this.modelDir)) { fs.mkdirSync(this.modelDir); }
     }

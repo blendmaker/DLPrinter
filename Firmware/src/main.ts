@@ -10,11 +10,10 @@ import { IpcMainSubject, IpcMessageInterface } from './IpcSubjects'
 const expApp = express();
 const settings = new Settings();
 const printRunner = new PrintRunner(layerCallback);
+const homeDir = settings.getHome();
 let ipc;
 
 let mainWindow : BrowserWindow;
-
-console.log(app.getPath('userData'));
 
 function init() {
     setupServer();
