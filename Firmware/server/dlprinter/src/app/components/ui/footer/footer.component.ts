@@ -30,8 +30,10 @@ export class FooterComponent implements OnInit {
   }
 
   private wsMessage(msg: string|any) {
+    console.log(msg);
     if (typeof msg === 'string') {
       msg = JSON.parse(msg);
+      console.log(msg);
 
       if (msg.cmd === 'state') {
         this.printerStatus = msg.state;

@@ -11,7 +11,6 @@ import { MessageInterface } from './IpcWsMessages/MessageInterface';
 const expApp = express();
 const settings = new Settings();
 const printRunner = new PrintRunner(layerCallback);
-const homeDir = settings.getHome();
 let ipc: IpcMainSubject;
 
 let mainWindow : BrowserWindow;
@@ -31,7 +30,9 @@ function setupServer() {
     expressWs(expApp).app.ws('/', (ws, req: express.Request) => {
         ws.on('message', (input:string) => {
             let msg: MessageInterface = JSON.parse(input);
-            
+            const send = (data : MessageInterface) => {
+                ws.send(JSON.stringify(data));
+            }
             // some commands will be redirected directly
             switch (msg.cmd) {
                 case 'color' :
@@ -40,16 +41,17 @@ function setupServer() {
                     break;
                 case 'get-settings' :
                     msg.data = settings.getSettingsData();
-                    ws.send(msg);
+                    send(msg);
                     break;
                 case 'set-settings' :
                     settings.setSettingsData(msg.data);
                     msg.cmd = 'get-settings';
-                    ws.send(msg); // propably useless... it is somekind of success message
+                    send(msg); // propably useless... it is somekind of success message
                     break;
                 case 'heartbeat' :
+                    msg.cmd = 'state';
                     msg.data = printRunner.getState();
-                    ws.send(msg);
+                    send(msg);
                     break;
                 case 'layer' :
                     let svgSize = printRunner.loadSvg(app.getPath('userData') + '/files/svgs/example_cube.svg');

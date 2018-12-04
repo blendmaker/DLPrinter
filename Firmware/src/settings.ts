@@ -8,6 +8,7 @@ export class Settings {
     private _homeDir = app.getPath('userData').replace('Electron', 'DLPrinter');
     
     constructor(clearToDefaults: boolean = false) {
+        if (! this._fs.existsSync(this._homeDir)) { this._fs.mkdirSync(this._homeDir); }
         let fExists : boolean = false;
 
         try {

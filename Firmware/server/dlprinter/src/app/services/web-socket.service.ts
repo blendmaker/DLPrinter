@@ -16,6 +16,8 @@ export class WebSocketService extends BehaviorSubject<any> {
   }
 
   public next(message: string|any): boolean {
+    console.log(message);
+
     if (typeof message !== 'string') {
       message = JSON.stringify(message);
     }

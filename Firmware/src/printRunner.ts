@@ -7,8 +7,8 @@ export class PrintRunner {
     private svg: string;
     private layers: string[];
     private _isPrinting: boolean = false;
-    private _zPos: 0.00;
-    private _light: false;
+    private _zPos: number = 12.00;
+    private _light: boolean = false;
     private _settings = new Settings();
     private builder = new Builder();
     private svgDir: string;
@@ -17,7 +17,7 @@ export class PrintRunner {
     constructor(private layerCallback: (layer: string) => void) {
         // check for existence of svg/stl folders
         this.modelDir = this._settings.getHome() + '/models';
-        this.svg = this._settings.getHome() + '/svg';
+        this.svgDir = this._settings.getHome() + '/svg';
         if (! fs.existsSync(this.svgDir)) { fs.mkdirSync(this.svgDir); }
         if (! fs.existsSync(this.modelDir)) { fs.mkdirSync(this.modelDir); }
     }
