@@ -1,8 +1,7 @@
 import { Settings } from './Settings'
 import { Builder, parseString } from 'Xml2js'
 import * as fs from 'fs';
-import { from, Observable, observable, Subscriber } from 'rxjs';
-import { app } from 'electron';
+import { from, Observable, Subscriber } from 'rxjs';
 
 export class PrintRunner {
     private svg: string;
@@ -23,9 +22,9 @@ export class PrintRunner {
         if (! fs.existsSync(this.modelDir)) { fs.mkdirSync(this.modelDir); }
     }
 
-    public getLocalFiles(): Observable<String[]> {
+    public getLocalFiles(path: string): Observable<String[]> {
         const result = Observable.create((subscriber: Subscriber<string[]>) => {
-            fs.readdir(this.svgDir, (err: any, files: string[]) => {
+            fs.readdir(path, (err: any, files: string[]) => {
                 subscriber.next(files);
             });
         });
@@ -40,7 +39,7 @@ export class PrintRunner {
         let xml = fs.readFileSync(filename);
         parseString(xml, (err: object, data:any) => {
             if (err) {
-                console.log(err);
+                console.error(err);
                 return;
             }
             from(data.svg.g).subscribe( (l) => {
@@ -56,12 +55,15 @@ export class PrintRunner {
     /**
      * requestLayer
      */
-    public requestLayer() {
+    public requestLayer(dropLayer = false) {
         if (this.svg == undefined) {
             throw new Error('no file loaded'); }
         else if (this.layers.length < 1) {
             throw new Error('no layers to print left in queue'); }
         this.layerCallback(this.layers[0]);
+        if (dropLayer) {
+            this.layers.shift();
+        }
     }
 
     /**

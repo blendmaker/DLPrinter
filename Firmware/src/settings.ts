@@ -3,11 +3,12 @@ import { app } from "electron";
 export class Settings {
     private _data: SettingsData;
     private _fs = require('fs');
+
+    // FIXME: Electron doesn't like the main.js to be somewhere other than root. Dirty fix to the wrong homeDir
     private _homeDir = app.getPath('userData').replace('Electron', 'DLPrinter');
     
     constructor(clearToDefaults: boolean = false) {
         let fExists : boolean = false;
-        this._homeDir = app.getPath('userData');
 
         try {
             this._fs.statSync(this._homeDir + '/dlprinter.config.json');

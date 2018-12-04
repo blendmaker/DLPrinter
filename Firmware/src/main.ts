@@ -5,13 +5,14 @@ import { PrintRunner } from './PrintRunner'
 import { format as urlFormat } from 'url';
 import * as expressWs from 'express-ws';
 import * as express from 'express';
-import { IpcMainSubject, IpcMessageInterface } from './IpcSubjects'
+import { IpcMainSubject } from './IpcSubjects'
+import { MessageInterface } from './IpcWsMessages/MessageInterface';
 
 const expApp = express();
 const settings = new Settings();
 const printRunner = new PrintRunner(layerCallback);
 const homeDir = settings.getHome();
-let ipc;
+let ipc: IpcMainSubject;
 
 let mainWindow : BrowserWindow;
 
@@ -29,28 +30,37 @@ function setupServer() {
     // TODO 3 of 4 communication parts went to other classes... a better approach for this? invest...
     expressWs(expApp).app.ws('/', (ws, req: express.Request) => {
         ws.on('message', (input:string) => {
-            let msg = JSON.parse(input);
+            let msg: MessageInterface = JSON.parse(input);
             
-            if (msg.cmd == 'color') {
-                mainWindow.webContents.send(msg.color);
-            } else if (msg.cmd == 'layer') {
-                let svgSize = printRunner.loadSvg(app.getPath('userData') + '/files/svgs/example_cube.svg');
-                mainWindow.webContents.send('center', { 'w' : svgSize.width, 'h' : svgSize.height });
-                printRunner.startPrint();
-            } else if (msg.cmd == 'text') {
-                mainWindow.webContents.send(msg.cmd, { 'msg' : msg.text });
-            } else if (msg.cmd == 'get-settings') {
-                ws.send(settings.getSettingsData());
-            } else if (msg.cmd == 'set-settings') {
-                settings.setSettingsData(msg.settings);
-            } else if (msg.cmd == 'heartbeat') {
-                ws.send(JSON.stringify(printRunner.getState()));
+            // some commands will be redirected directly
+            switch (msg.cmd) {
+                case 'color' :
+                case 'text' :
+                    ipc.send(msg);
+                    break;
+                case 'get-settings' :
+                    msg.data = settings.getSettingsData();
+                    ws.send(msg);
+                    break;
+                case 'set-settings' :
+                    settings.setSettingsData(msg.data);
+                    msg.cmd = 'get-settings';
+                    ws.send(msg); // propably useless... it is somekind of success message
+                    break;
+                case 'heartbeat' :
+                    msg.data = printRunner.getState();
+                    ws.send(msg);
+                    break;
+                case 'layer' :
+                    let svgSize = printRunner.loadSvg(app.getPath('userData') + '/files/svgs/example_cube.svg');
+                    ipc.send({ cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
+                    printRunner.startPrint();
+                    break;
             }
         });
     });
 
     expApp.use(express.static(path.join(__dirname, '..', 'server', 'dist')));
-    //expApp.get('/settings', (req:any, res:any) => { res.send(settings.getSettingsData()); });
     expApp.get('*', (req, res, next) => { res.sendFile(path.join(__dirname, '..', 'server', 'dist', 'index.html')); });
     expApp.listen(settings.getSettingsData().port, function() { console.log('Express listening on ' + settings.getSettingsData().port); });
 }
@@ -76,9 +86,9 @@ function setupWindow() {
 
 function setupIpc() {
     ipc = new IpcMainSubject(mainWindow.webContents.send);
-    ipc.subscribe((msg: IpcMessageInterface) => {
+    ipc.subscribe((msg: MessageInterface) => {
         switch (msg.cmd) {
-            case 'asdf' : break;
+            case '' : break;
         }
     });
 }

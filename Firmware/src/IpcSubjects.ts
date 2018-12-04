@@ -1,7 +1,8 @@
 import { Subject } from 'rxjs'
 import { ipcRenderer, ipcMain } from 'electron'
+import { MessageInterface } from './IpcWsMessages/MessageInterface';
 
-export class IpcMainSubject extends Subject<IpcMessageInterface> {
+export class IpcMainSubject extends Subject<MessageInterface> {
     constructor (private _sendFunc: (channel: string, msg: any)=>void) {
         super();
         ipcMain.on('message', (e:Event, args:string) => {
@@ -9,13 +10,13 @@ export class IpcMainSubject extends Subject<IpcMessageInterface> {
         });
     }
 
-    public send(message: IpcMessageInterface) {
+    public send(message: MessageInterface) {
         const msg = JSON.stringify(message);
         this._sendFunc('message', msg);
     }
 }
 
-export class IpcRendererSubject extends Subject<IpcMessageInterface> {
+export class IpcRendererSubject extends Subject<MessageInterface> {
     constructor () {
         super();
         ipcRenderer.on('message', (e:Event, args: string) => {
@@ -23,13 +24,8 @@ export class IpcRendererSubject extends Subject<IpcMessageInterface> {
         });
     }
 
-    send(message: IpcMessageInterface) {
+    send(message: MessageInterface) {
         const msg = JSON.stringify(message);
         ipcRenderer.send('message', msg);
     }
-}
-
-export interface IpcMessageInterface {
-    cmd: '' | 'asdf' ;
-    data: any;
 }
