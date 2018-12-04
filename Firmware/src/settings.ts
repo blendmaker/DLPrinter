@@ -1,11 +1,13 @@
-import { app } from "electron";
+import { app, remote } from "electron";
 
 export class Settings {
     private _data: SettingsData;
     private _fs = require('fs');
 
     // FIXME: Electron doesn't like the main.js to be somewhere other than root. Dirty fix to the wrong homeDir
-    private _homeDir = app.getPath('userData').replace('Electron', 'DLPrinter');
+    private _homeDir = (app !== undefined)?
+        app.getPath('userData').replace('Electron', 'DLPrinter'):
+        remote.app.getPath('userData').replace('Electron', 'DLPrinter');
     
     constructor(clearToDefaults: boolean = false) {
         if (! this._fs.existsSync(this._homeDir)) { this._fs.mkdirSync(this._homeDir); }

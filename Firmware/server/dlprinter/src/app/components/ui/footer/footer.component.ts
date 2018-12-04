@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WebSocketService } from 'src/app/services/web-socket.service';
 import { interval } from 'rxjs';
+import { MessageInterface } from '../../../../../../../src/IpcWsMessages/MessageInterface';
 
 @Component({
   selector: 'app-footer',
@@ -23,21 +24,17 @@ export class FooterComponent implements OnInit {
   constructor(private webSocketService: WebSocketService) { }
 
   ngOnInit() {
-    this.webSocketService.subscribe(this.wsMessage);
-    interval(2000).subscribe(() => {
-      this.connected = this.webSocketService.next({cmd : 'heartbeat'});
-    });
-  }
+    this.webSocketService.subscribe((msg: MessageInterface|string|any) => {
+      if (typeof msg === 'string') {
+        msg = JSON.parse(msg);
 
-  private wsMessage(msg: string|any) {
-    console.log(msg);
-    if (typeof msg === 'string') {
-      msg = JSON.parse(msg);
-      console.log(msg);
-
-      if (msg.cmd === 'state') {
-        this.printerStatus = msg.state;
+        if (msg.cmd === 'state') {
+          this.printerStatus = msg.data;
+        }
       }
-    }
+    });
+    interval(2000).subscribe(() => {
+      this.connected = this.webSocketService.send({cmd : 'heartbeat', data : {}});
+    });
   }
 }

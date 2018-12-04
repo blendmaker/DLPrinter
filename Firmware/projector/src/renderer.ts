@@ -15,6 +15,7 @@ let pixelHeight: number;
 let pixelWidth: number;
 
 ipc.subscribe((msg: any) => {
+    console.log('ipc received');
     if (typeof msg === 'string') {
         msg = JSON.parse(msg);
     }
@@ -90,10 +91,8 @@ function stop(a:any){
 
 document.addEventListener('DOMContentLoaded', function(){
     // apply scaling
-    //pixelHeight = svg.node().getBoundingClientRect().height;
-    //pixelWidth = svg.node().getBoundingClientRect().width;
-    console.log(svg.node());
-    console.log(svg.node().constructor.name);
+    pixelHeight = (svg.node() as any).getBoundingClientRect().height;
+    pixelWidth = (svg.node() as any).getBoundingClientRect().width;
     gScale.attr('transform', "scale(" + 
         (pixelWidth/phys_width).toFixed(3) + " " + 
         (pixelHeight/phys_height).toFixed(3) + ")");

@@ -30,7 +30,7 @@ function setupServer() {
     expressWs(expApp).app.ws('/', (ws, req: express.Request) => {
         ws.on('message', (input:string) => {
             let msg: MessageInterface = JSON.parse(input);
-            const send = (data : MessageInterface) => {
+            const wsSend = (data : MessageInterface) => {
                 ws.send(JSON.stringify(data));
             }
             // some commands will be redirected directly
@@ -41,17 +41,17 @@ function setupServer() {
                     break;
                 case 'get-settings' :
                     msg.data = settings.getSettingsData();
-                    send(msg);
+                    wsSend(msg);
                     break;
                 case 'set-settings' :
                     settings.setSettingsData(msg.data);
                     msg.cmd = 'get-settings';
-                    send(msg); // propably useless... it is somekind of success message
+                    wsSend(msg); // propably useless... it is somekind of success message
                     break;
                 case 'heartbeat' :
                     msg.cmd = 'state';
                     msg.data = printRunner.getState();
-                    send(msg);
+                    wsSend(msg);
                     break;
                 case 'layer' :
                     let svgSize = printRunner.loadSvg(app.getPath('userData') + '/files/svgs/example_cube.svg');

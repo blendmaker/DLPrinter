@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, interval } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { MessageInterface } from '../../../../../src/IpcWsMessages/MessageInterface';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +16,7 @@ export class WebSocketService extends BehaviorSubject<any> {
     this.connect();
   }
 
-  public next(message: string|any): boolean {
-    console.log(message);
-
+  public send(message: MessageInterface|any) {
     if (typeof message !== 'string') {
       message = JSON.stringify(message);
     }
@@ -28,6 +27,10 @@ export class WebSocketService extends BehaviorSubject<any> {
     return false;
   }
 
+  /*public next(message: MessageInterface|any) {
+
+  }*/
+
   public getValue() {
     return this.status;
   }
@@ -35,6 +38,9 @@ export class WebSocketService extends BehaviorSubject<any> {
   private connect(): boolean {
     if (! this.ws || this.ws.readyState !== this.ws.OPEN) {
       this.ws = new WebSocket(this.wsUrl);
+      this.ws.onmessage = (event: MessageEvent) => {
+        this.next(event.data);
+      };
     }
     return this.ws.readyState === this.ws.OPEN;
   }
