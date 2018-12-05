@@ -37,7 +37,8 @@ function setupServer() {
             switch (msg.cmd) {
                 case 'color' :
                 case 'text' :
-                    ipc.send(msg);
+                    // ipc.send(msg);
+                    mainWindow.webContents.send('message', msg);
                     break;
                 case 'get-settings' :
                     msg.data = settings.getSettingsData();
@@ -55,7 +56,8 @@ function setupServer() {
                     break;
                 case 'layer' :
                     let svgSize = printRunner.loadSvg(app.getPath('userData') + '/files/svgs/example_cube.svg');
-                    ipc.send({ cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
+                    // ipc.send({ cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
+                    mainWindow.webContents.send('message', { cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
                     printRunner.startPrint();
                     break;
             }

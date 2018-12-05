@@ -19,8 +19,11 @@ export class IpcMainSubject extends Subject<MessageInterface> {
 export class IpcRendererSubject extends Subject<MessageInterface> {
     constructor () {
         super();
-        ipcRenderer.on('message', (e:Event, args: string) => {
-            this.next(JSON.parse(args));
+        ipcRenderer.on('message', (e:Event, args: string|MessageInterface) => {
+            if (typeof args === 'string') {
+                args = JSON.parse(args) as MessageInterface;
+            }
+            this.next(args);
         });
     }
 

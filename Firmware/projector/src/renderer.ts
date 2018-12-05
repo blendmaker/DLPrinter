@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { Settings } from '../../src/settings';
 import { IpcRendererSubject } from '../../src/IpcSubjects';
+import { MessageInterface } from '../../src/IpcWsMessages/MessageInterface';
 
 const settings = new Settings();
 const ipc = new IpcRendererSubject();
@@ -14,80 +15,41 @@ const phys_height = settings.getSettingsData().phys_height;
 let pixelHeight: number;
 let pixelWidth: number;
 
-ipc.subscribe((msg: any) => {
-    console.log('ipc received');
-    if (typeof msg === 'string') {
-        msg = JSON.parse(msg);
-    }
+ipc.subscribe((msg: MessageInterface) => {
     switch (msg.cmd) {
-        case 'black': black(msg); break;
-        case 'white': white(msg); break;
+        case 'color' : color(msg); break;
         case 'text': text(msg); break;
-        case 'svg-layer': svgLayer(msg); break;
+        case 'layer' : svgLayer(msg); break;
         case 'center': center(msg); break;
     }
 });
 
-/*ipc.on("black",    black);
-ipc.on("white",    white);
-ipc.on("text",     text);
-
-ipc.on("svg-layer", svgLayer);
-ipc.on("center",   center);
-ipc.on("start",    start);
-ipc.on("pause",    pause);
-ipc.on("resume",   resume);
-ipc.on("stop",     stop);*/
-
-function svgLayer(a:any){
-    gScale.html(a.layer);
+function svgLayer(a:MessageInterface){
+    gScale.html(a.data);
 }
 
-function center(a:any) {
+function center(a:MessageInterface) {
     // transform half the object size to pixel
     const pixelPerMmX = pixelWidth/phys_width;
     const pixelPerMmY = pixelHeight/phys_height;
     const cX = pixelWidth/2;
     const cY = pixelHeight/2;
-    const pX = (cX-(pixelPerMmX*(a.w/2))).toFixed(3);
-    const pY = (cY-(pixelPerMmY*(a.h)/2)).toFixed(3);
+    const pX = (cX-(pixelPerMmX*(a.data.w/2))).toFixed(3);
+    const pY = (cY-(pixelPerMmY*(a.data.h)/2)).toFixed(3);
 
     gPos.attr('transform', "translate(" + pX + " " + pY + ")");
 }
 
-function black(a:any){
-    svg.style('background-color', 'black');
-    pText.style('color', 'white');
+function color(a:MessageInterface){
+    svg.style('background-color', a.data);
+    pText.style('color', a.data==='white'?'black':'white');
     pText.html("");
     gScale.html("");
 }
 
-function white(a:any){
-    svg.style('background-color', 'white');
-    pText.style('color', 'black');
-    pText.html("");
-    gScale.html("");
+function text(a:MessageInterface){
+    pText.html(a.data);
 }
-
-function text(a:any){
-    pText.html(a.msg);
-}
-
-/*function start(a:any){
-    
-}
-
-function pause(a:any){
-    
-}
-
-function resume(a:any){
-    
-}
-
-function stop(a:any){
-    
-}*/
 
 document.addEventListener('DOMContentLoaded', function(){
     // apply scaling

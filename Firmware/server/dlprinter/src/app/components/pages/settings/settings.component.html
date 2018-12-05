@@ -1,18 +1,30 @@
 <h1>Einstellungen</h1>
-<ngb-tabset>
-  <ngb-tab title="General">
-    <ng-template ngbTabContent>
+<form [formGroup]="form">
+  <ngb-tabset>
+    <ngb-tab title="General">
+      <ng-template ngbTabContent>
+        <div class="form-group">
+          <ng-template #tipPort>The port, the webserver should listen to. Most Linux distributions forbid using ports lower than 1024. Since the server doesn't intend to run with root privileges a local proxy server like <a href="http://www.haproxy.org/" target="_blank">haproxy</a> may be used. Changes take only effect after restart.<br /><b>Default: 8181</b></ng-template>
+          <label>Port<i class="fa fa-info" [ngbTooltip]="tipPort"></i></label>
+          <input type="text" class="form-control" name="port" formControlName="port">
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Print & Slicing">
+      <ng-template ngbTabContent>
+        <div class="form-group">
+          <ng-template #tipSecurity>Enable/Disable login and block the webfrontend until a user has logged in.<br /><b>Default: off</b></ng-template>
+          <label class="btn-primary" ngbButtonLabel>
+            <input type="checkbox" name="security" formControlName="security" ngbButton>
+            Userlogin enabaled <i class="fa fa-info" [ngbTooltip]="tipSecurity"></i>
+          </label>
+        </div>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="Hardware">
+      <ng-template ngbTabContent>
 
-    </ng-template>
-  </ngb-tab>
-  <ngb-tab title="Print & Slicing">
-    <ng-template ngbTabContent>
-
-    </ng-template>
-  </ngb-tab>
-  <ngb-tab title="Hardware">
-    <ng-template ngbTabContent>
-
-    </ng-template>
-  </ngb-tab>
-</ngb-tabset>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</form>

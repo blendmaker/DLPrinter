@@ -10,6 +10,7 @@ import { WebSocketService } from './services/web-socket.service';
 import { StatusComponent } from './components/pages/status/status.component';
 import { PrintComponent } from './components/pages/print/print.component';
 import { SettingsComponent } from './components/pages/settings/settings.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { SettingsComponent } from './components/pages/settings/settings.componen
     BrowserModule,
     AppRoutingModule,
     NgbModule,
+    ReactiveFormsModule,
   ],
   providers: [ WebSocketService ],
   bootstrap: [ AppComponent ]
