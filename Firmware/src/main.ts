@@ -55,7 +55,7 @@ function setupServer() {
                     wsSend(msg);
                     break;
                 case 'layer' :
-                    let svgSize = printRunner.loadSvg(app.getPath('userData') + '/files/svgs/example_cube.svg');
+                    let svgSize = printRunner.loadSvg(settings.getHome() + '/example_cube.svg');
                     // ipc.send({ cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
                     mainWindow.webContents.send('message', { cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
                     printRunner.startPrint();
