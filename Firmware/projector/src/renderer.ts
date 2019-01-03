@@ -58,4 +58,4 @@ document.addEventListener('DOMContentLoaded', function(){
     gScale.attr('transform', "scale(" + 
         (pixelWidth/phys_width).toFixed(3) + " " + 
         (pixelHeight/phys_height).toFixed(3) + ")");
- });
+});
