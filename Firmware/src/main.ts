@@ -33,6 +33,7 @@ function setupServer() {
             const wsSend = (data : MessageInterface) => {
                 ws.send(JSON.stringify(data));
             }
+
             // some commands will be redirected directly
             switch (msg.cmd) {
                 case 'color' :

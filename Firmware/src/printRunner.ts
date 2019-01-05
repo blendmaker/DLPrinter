@@ -6,18 +6,18 @@ import { from, Observable, Subscriber } from 'rxjs';
 export class PrintRunner {
     private svg: string;
     private layers: string[];
-    private _isPrinting: boolean = false;
-    private _zPos: number = 12.00;
-    private _light: boolean = false;
-    private _settings = new Settings();
+    private isPrinting: boolean = false;
+    private zPos: number = 0.00;
+    private light: boolean = false;
+    private settings = new Settings();
     private builder = new Builder();
     private svgDir: string;
     private modelDir: string;
 
     constructor(private layerCallback: (layer: string) => void) {
         // check for existence of svg/stl folders
-        this.modelDir = this._settings.getHome() + '/models';
-        this.svgDir = this._settings.getHome() + '/svg';
+        this.modelDir = this.settings.getHome() + '/models';
+        this.svgDir = this.settings.getHome() + '/svg';
         if (! fs.existsSync(this.svgDir)) { fs.mkdirSync(this.svgDir); }
         if (! fs.existsSync(this.modelDir)) { fs.mkdirSync(this.modelDir); }
     }
@@ -45,7 +45,6 @@ export class PrintRunner {
             from(data.svg.g).subscribe( (l) => {
                 this.layers.push( this.builder.buildObject(l).replace('<root', '<g').replace('</root', '</g') )
             } );
-            console.log(this.layers);
             result.width = data.svg.$.width;
             result.height = data.svg.$.height;
         });
@@ -73,16 +72,16 @@ export class PrintRunner {
         if (this.svg == undefined) {
             throw new Error('no file loaded'); }
         
-        this._isPrinting = true;
+        this.isPrinting = true;
 
         // how to do that? iterate over simplesteps or do a per layer loop?
     }
 
     public getState() {
         return {
-            printing : this._isPrinting,
-            z : this._zPos,
-            light : this._light,
+            printing : this.isPrinting,
+            z : this.zPos,
+            light : this.light,
         }
     }
  

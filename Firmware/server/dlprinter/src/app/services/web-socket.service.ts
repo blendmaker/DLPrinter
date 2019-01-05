@@ -10,6 +10,7 @@ export class WebSocketService extends BehaviorSubject<any> {
   private wsUrl = environment.wsUrl;
   private ws: WebSocket;
   private status: any;
+  private timeout = 1000;
 
   constructor() {
     super({});
@@ -17,6 +18,7 @@ export class WebSocketService extends BehaviorSubject<any> {
   }
 
   public send(message: MessageInterface|any) {
+    console.log(message.cmd);
     if (typeof message !== 'string') {
       message = JSON.stringify(message);
     }
