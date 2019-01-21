@@ -38,6 +38,9 @@ export class SettingsComponent implements OnInit {
           this.settingsToControls();
       }
     });
+    console.log( this.webSocketService.send({ cmd: 'get-settings', data: {}}) );
+    console.log(this.webSocketService);
+    console.log('settings component initialized');
   }
 
   protected sendSettings() {
@@ -48,7 +51,6 @@ export class SettingsComponent implements OnInit {
     of(this.form.controls).subscribe((ctrl) => {
       console.log(ctrl);
     });
-    console.log(this.form.controls);
   }
 
   private settingsToControls() {
