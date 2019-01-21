@@ -49,13 +49,15 @@ function setupServer() {
                     msg.cmd = 'get-settings';
                     wsSend(msg); // propably useless... it is somekind of success message
                     break;
+                case 'light' :
+                    printRunner.triggerLight(); // no break for new state
                 case 'heartbeat' :
                     msg.cmd = 'state';
                     msg.data = printRunner.getState();
                     wsSend(msg);
                     break;
                 case 'layer' :
-                    let svgSize = printRunner.loadSvg(settings.getHome() + '/example_cube.svg');
+                    let svgSize = printRunner.loadSvg(settings.getHome() + '/svg/example_cube.svg');
                     // ipc.send({ cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
                     mainWindow.webContents.send('message', { cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
                     printRunner.startPrint();

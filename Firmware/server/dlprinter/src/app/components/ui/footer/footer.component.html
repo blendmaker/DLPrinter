@@ -6,6 +6,6 @@
     &nbsp;|&nbsp;
     <span>z: {{ printerStatus.z | number:'1.2-2' }}mm </span>
     &nbsp;|&nbsp;
-    <span>light: <i class="fa fa-lightbulb-o" [ngClass]="printerStatus.light?'on':''"></i></span>
+    <span (click)="triggerLight($event)">light: <i class="fa fa-lightbulb-o" [ngClass]="printerStatus.light?'on':''"></i></span>
   </div>
 </nav>

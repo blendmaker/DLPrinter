@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import { from, Observable, Subscriber } from 'rxjs';
 
 export class PrintRunner {
-    private svg: string;
+    //private svg: string;
     private layers: string[];
     private _isPrinting: boolean = false;
     private _zPos: number = 12.00;
@@ -37,15 +37,14 @@ export class PrintRunner {
     public loadSvg(filename: string): { width:number, height:number} {
         let result = { width:0, height:0 };
         let xml = fs.readFileSync(filename);
+        this.layers = [];
         parseString(xml, (err: object, data:any) => {
             if (err) {
                 console.error(err);
-                return;
             }
             from(data.svg.g).subscribe( (l) => {
                 this.layers.push( this.builder.buildObject(l).replace('<root', '<g').replace('</root', '</g') )
             } );
-            console.log(this.layers);
             result.width = data.svg.$.width;
             result.height = data.svg.$.height;
         });
@@ -56,10 +55,14 @@ export class PrintRunner {
      * requestLayer
      */
     public requestLayer(dropLayer = false) {
-        if (this.svg == undefined) {
-            throw new Error('no file loaded'); }
-        else if (this.layers.length < 1) {
-            throw new Error('no layers to print left in queue'); }
+        if (!this.layers) {
+            throw new Error('no file loaded');
+            return;
+        }
+        /*else if (this.layers.length < 1) {
+            throw new Error('no layers to print left in queue');
+            return;
+        }*/
         this.layerCallback(this.layers[0]);
         if (dropLayer) {
             this.layers.shift();
@@ -70,11 +73,19 @@ export class PrintRunner {
      * startPrint
      */
     public startPrint() {
-        if (this.svg == undefined) {
-            throw new Error('no file loaded'); }
+        if (!this.layers) {
+            throw new Error('no file loaded');
+            return;
+        }
         
         this._isPrinting = true;
 
+        setTimeout(() => {
+            console.log('timeout');
+            while(this._isPrinting) {
+                this.tickPrint();
+            }
+        });
         // how to do that? iterate over simplesteps or do a per layer loop?
     }
 
@@ -85,7 +96,31 @@ export class PrintRunner {
             light : this._light,
         }
     }
+
+    public triggerLight() {
+        this._light = !this._light;
+    }
  
+    i=0;
+    private tickPrint() {
+        this.i++;
+
+        if (this.i>100000) {
+            this._isPrinting = false;
+        }
+        if (!this._isPrinting) {
+            console.log('print stopped');
+        }
+        /*mainWindow.webContents.send('svg-layer', { 'layer' : 
+            builder.buildObject(layers[0]).replace('<root', '<g').replace('</root', '</g')
+        });
+        layers.shift();
+        mainWindow.webContents.send('text', { 'msg' : layers.length + ' Layers left.' });
+    
+        if (layers.length > 0) {
+            setTimeout(tickPrint, 100);
+        }*/
+    }
     /*
     function loadSvg(fn: string) {
     

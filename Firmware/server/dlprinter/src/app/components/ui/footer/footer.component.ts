@@ -37,4 +37,9 @@ export class FooterComponent implements OnInit {
       this.connected = this.webSocketService.send({cmd : 'heartbeat', data : {}});
     });
   }
+
+  triggerLight(event$: any) {
+    console.log(event$);
+    this.webSocketService.send({ cmd : 'light' });
+  }
 }
