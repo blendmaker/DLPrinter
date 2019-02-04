@@ -17,12 +17,8 @@ export class WebSocketService extends BehaviorSubject<any> {
     this.connect();
   }
 
-<<<<<<< HEAD
   public send(message: MessageInterface | string) {
-=======
-  public send(message: MessageInterface|any) {
     console.log(message.cmd);
->>>>>>> 73af213cdef6c87cde3a1b5b4d5c64924440be37
     if (typeof message !== 'string') {
       message = JSON.stringify(message);
     }
