@@ -6,9 +6,9 @@ import { from, Observable, Subscriber } from 'rxjs';
 export class PrintRunner {
     //private svg: string;
     private layers: string[];
-    private isPrinting: boolean = false;
-    private zPos: number = 0.00;
-    private light: boolean = false;
+    private _isPrinting: boolean = false;
+    private _zPos: number = 0.00;
+    private _light: boolean = false;
     private settings = new Settings();
     private builder = new Builder();
     private svgDir: string;
@@ -57,7 +57,6 @@ export class PrintRunner {
     public requestLayer(dropLayer = false) {
         if (!this.layers) {
             throw new Error('no file loaded');
-            return;
         }
         /*else if (this.layers.length < 1) {
             throw new Error('no layers to print left in queue');
@@ -78,7 +77,7 @@ export class PrintRunner {
             return;
         }
         
-        this.isPrinting = true;
+        this._isPrinting = true;
 
         setTimeout(() => {
             console.log('timeout');
@@ -91,9 +90,9 @@ export class PrintRunner {
 
     public getState() {
         return {
-            printing : this.isPrinting,
-            z : this.zPos,
-            light : this.light,
+            printing : this._isPrinting,
+            z : this._zPos,
+            light : this._light,
         }
     }
 

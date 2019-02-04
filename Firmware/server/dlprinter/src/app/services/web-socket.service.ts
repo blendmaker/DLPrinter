@@ -18,7 +18,9 @@ export class WebSocketService extends BehaviorSubject<any> {
   }
 
   public send(message: MessageInterface | string) {
-    console.log(message.cmd);
+    if (typeof message === 'object') {
+      console.log(message.cmd);
+    }
     if (typeof message !== 'string') {
       message = JSON.stringify(message);
     }
@@ -28,10 +30,6 @@ export class WebSocketService extends BehaviorSubject<any> {
     }
     return false;
   }
-
-  /*public next(message: MessageInterface|any) {
-
-  }*/
 
   public getValue() {
     return this.status;
