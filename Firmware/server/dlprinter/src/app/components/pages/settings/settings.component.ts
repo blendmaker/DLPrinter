@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { SettingsData } from './../../../../../../../src/Settings';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { from, of } from 'rxjs';
 import { WebSocketService } from 'src/app/services/web-socket.service';
-import { MessageInterface } from '../../../../../../../src/IpcWsMessages/MessageInterface';
-import { SettingsData } from '../../../../../../../src/Settings';
+import { first } from 'rxjs/operators';
+import { SettingsService } from 'src/app/services/settings.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, OnDestroy {
   form: FormGroup = new FormGroup({
     port: new FormControl('', [ Validators.required ]),
     phys_width: new FormControl('', [ Validators.required ]),
@@ -26,34 +27,54 @@ export class SettingsComponent implements OnInit {
     z_max_speed: new FormControl('', [ Validators.required ]),
     z_acceleration: new FormControl('', [ Validators.required ]),
     z_steps: new FormControl('', [ Validators.required ]),
-    security: new FormControl(true),
+    security: new FormControl(false),
   });
-  settings: SettingsData;
-  constructor(private webSocketService: WebSocketService) { }
+  subscriber: Subscription[] = [];
+
+  constructor(private ws: WebSocketService, private settingsService: SettingsService) { }
 
   ngOnInit() {
-    this.webSocketService.subscribe((msg: MessageInterface) => {
-      switch (msg.cmd) {
-        case 'get-settings' :
-          this.settingsToControls();
+    console.log('Settings Component initialized');
+    this.subscriber.push(this.settingsService.getSettingsData().subscribe( data => {
+      console.error('settings applied to form controls');
+      this.settingsToControls(data);
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscriber.forEach(element => {
+      element.unsubscribe();
+    });
+    this.subscriber = [];
+  }
+
+  protected resetSettings($event: Event) {
+    $event.preventDefault();
+    this.settingsService.resetSettingsData();
+  }
+
+  protected sendSettings($event: Event) {
+    $event.preventDefault();
+
+    // TODO handle slicer settings
+    this.subscriber.push(this.settingsService.getSettingsData().pipe( first() ).subscribe( data => {
+      for (const key in this.form.controls) {
+        if (this.form.controls.hasOwnProperty(key)) {
+            data[key] = this.form.controls[key].value;
+        }
       }
-    });
-    console.log( this.webSocketService.send({ cmd: 'get-settings', data: {}}) );
-    console.log(this.webSocketService);
-    console.log('settings component initialized');
+      this.settingsService.setSettingsData(data);
+    } ));
   }
 
-  protected sendSettings() {
-    this.controlsToSettings();
-  }
-
-  private controlsToSettings() {
-    of(this.form.controls).subscribe((ctrl) => {
-      console.log(ctrl);
-    });
-  }
-
-  private settingsToControls() {
-
+  private settingsToControls(settingsData: SettingsData) {
+    for (const key in settingsData) {
+      if (settingsData.hasOwnProperty(key)) {
+        if (typeof settingsData[key] !== 'object') {
+          this.form.get(key).setValue(settingsData[key]);
+        }
+      }
+    }
+    // TODO handle slicer settings
   }
 }

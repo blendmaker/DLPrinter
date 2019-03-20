@@ -39,7 +39,8 @@ function setupServer() {
                 case 'color' :
                 case 'text' :
                     // ipc.send(msg);
-                    mainWindow.webContents.send('message', msg);
+                    // mainWindow.webContents.send('message', msg);
+                    ipc.send(msg);
                     break;
                 case 'get-settings' :
                     msg.data = settings.getSettingsData();
@@ -49,6 +50,11 @@ function setupServer() {
                     settings.setSettingsData(msg.data);
                     msg.cmd = 'get-settings';
                     wsSend(msg); // propably useless... it is somekind of success message
+                    break;
+                case 'reset-settings' :
+                    msg.cmd = 'get-settings';
+                    msg.data = settings.resetToDefaults();
+                    wsSend(msg);
                     break;
                 case 'light' :
                     printRunner.triggerLight(); // no break for new state
@@ -60,7 +66,8 @@ function setupServer() {
                 case 'layer' :
                     let svgSize = printRunner.loadSvg(settings.getHome() + '/svg/example_cube.svg');
                     // ipc.send({ cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
-                    mainWindow.webContents.send('message', { cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
+                    // mainWindow.webContents.send('message', { cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
+                    ipc.send({ cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
                     printRunner.startPrint();
                     break;
             }
@@ -92,7 +99,7 @@ function setupWindow() {
 }
 
 function setupIpc() {
-    ipc = new IpcMainSubject(mainWindow.webContents.send);
+    ipc = new IpcMainSubject(mainWindow.webContents.send.bind(mainWindow.webContents));
     ipc.subscribe((msg: MessageInterface) => {
         switch (msg.cmd) {
             case '' : break;

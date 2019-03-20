@@ -11,6 +11,7 @@ import { StatusComponent } from './components/pages/status/status.component';
 import { PrintComponent } from './components/pages/print/print.component';
 import { SettingsComponent } from './components/pages/settings/settings.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { DisconnectedDisplayComponent } from './components/ui/disconnected-display/disconnected-display.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     StatusComponent,
     PrintComponent,
     SettingsComponent,
+    DisconnectedDisplayComponent,
   ],
   imports: [
     BrowserModule,
@@ -27,6 +29,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     NgbModule,
     ReactiveFormsModule,
   ],
+  entryComponents: [ DisconnectedDisplayComponent ],
   providers: [ WebSocketService ],
   bootstrap: [ AppComponent ]
 })

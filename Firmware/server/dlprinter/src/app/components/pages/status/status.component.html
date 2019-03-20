@@ -1,6 +1,10 @@
-<div class="jumbotron">
-  <h1>At some point... this Firmware will be finished !</h1>
+<h1>
+  Printerstatus: 
+  <span class="badge badge-success" *ngIf="state.printing">Printing</span>
+  <span class="badge badge-secondary" *ngIf="!state.printing">Idling</span>
+</h1>
 
+<div class="jumbotron">
   <button type="button" class="btn btn-primary mr-2" (click)="whiteClicked();">White screen</button>
   <button type="button" class="btn btn-primary mr-2" (click)="blackClicked();">Black screen</button>
   <button type="button" class="btn btn-primary mr-2" (click)="textClicked();">Print text</button>

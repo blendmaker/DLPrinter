@@ -1,11 +1,19 @@
 <nav class="navbar navbar-dark bg-dark mt-5 fixed-bottom">
   <div class="navbar-expand m-auto navbar-text">
-    <span>Websocket: <i class="fa fa-signal" [ngClass]="connected?'connected':''" [ngbTooltip]="tooltipConnection[((connected)?0:1)]"></i></span>
+    <span>
+      Websocket: <i class="fa fa-signal" [ngClass]="connected?'connected':''" [ngbTooltip]="tooltipConnection[((connected)?0:1)]"></i>
+    </span>
     &nbsp;|&nbsp;
-    <span>Printrunning: <i class="fa" [ngClass]="printerStatus.printing?'fa-play':'fa-pause'" ngbTooltip="Overall status of the printer"></i></span>
+    <span>
+      Printrunning: <i class="fa" [ngClass]="printerStatus.printing?'fa-play':'fa-pause'" ngbTooltip="Overall status of the printer"></i>
+    </span>
     &nbsp;|&nbsp;
-    <span>z: {{ printerStatus.z | number:'1.2-2' }}mm </span>
+    <span>
+      z: {{ printerStatus.z | number:'1.2-2' }}mm
+    </span>
     &nbsp;|&nbsp;
-    <span (click)="triggerLight($event)">light: <i class="fa fa-lightbulb-o" [ngClass]="printerStatus.light?'on':''"></i></span>
+    <span (click)="triggerLight()" role="button" class="light-button" ngbTooltip="Click to manually trigger the Lamp on the printer">
+      light: <i class="fa fa-lightbulb-o" [ngClass]="printerStatus.light?'on':''"></i>
+    </span>
   </div>
 </nav>

@@ -1,3 +1,6 @@
+import { PrinterState } from './../../../../../../../src/printRunner';
+import { MessageInterface } from './../../../../../../../src/IpcWsMessages/MessageInterface';
+import { WebSocketService } from './../../../services/web-socket.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,10 +9,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./print.component.scss']
 })
 export class PrintComponent implements OnInit {
-
-  constructor() { }
+  public state: PrinterState;
+  constructor(private ws: WebSocketService) { }
 
   ngOnInit() {
+    this.ws.subscribe( data => {
+      switch (data.cmd) {
+        case 'state' : this.state = data.data; break;
+      }
+    });
   }
-
 }

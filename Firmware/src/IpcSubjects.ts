@@ -27,7 +27,7 @@ export class IpcRendererSubject extends Subject<MessageInterface> {
         });
     }
 
-    send(message: MessageInterface) {
+    public send(message: MessageInterface) {
         const msg = JSON.stringify(message);
         ipcRenderer.send('message', msg);
     }

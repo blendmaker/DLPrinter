@@ -1,101 +1,131 @@
 <h1>Einstellungen</h1>
+
 <form [formGroup]="form" (submit)="sendSettings()">
   <ngb-tabset>
     <ngb-tab title="General">
       <ng-template ngbTabContent>
-
-        <div class="form-group">
+        <div class="form-group pt-3">
           <ng-template #tipPort>The port, the webserver should listen to. Most Linux distributions forbid using ports lower than 1024. Since the server doesn't intend to run with root privileges a local proxy server like <a href="http://www.haproxy.org/" target="_blank">haproxy</a> may be used. Changes take only effect after restart.<br /><b>Default: 8181</b></ng-template>
-          <label>Port <i class="fa fa-info" [ngbTooltip]="tipPort"></i></label>
-          <input type="text" class="form-control" formControlName="port">
+          <label>
+            Port <i class="fa fa-info" [ngbTooltip]="tipPort"></i>
+            <input type="text" class="form-control" formControlName="port">
+          </label>
         </div>
-        <div class="form-check">
+        <div class="form-check pb-3">
           <ng-template #tipSecurity>Enable/Disable login and block the webfrontend until a user has logged in.<br /><b>Default: off</b></ng-template>
-          <input class="form-check-input" type="checkbox" formControlName="security">
-          <label class="form-check-label">Userlogin enabled <i class="fa fa-info" [ngbTooltip]="tipSecurity"></i></label>
+          <label class="form-check-label">
+            <input class="form-check-input" type="checkbox" formControlName="security">
+            Userlogin enabled <i class="fa fa-info" [ngbTooltip]="tipSecurity"></i>
+          </label>
         </div>
-  
       </ng-template>
     </ngb-tab>
     <ngb-tab title="Print & Slicing">
       <ng-template ngbTabContent>
-
-        <div class="form-group">
+        <div class="form-group pt-3">
           <ng-template #tipMinLayerHeight>Smalles printable vertical layerheight.<br /><b>Default: 0.025</b></ng-template>
-          <label>Minimum layer height <i class="fa fa-info" [ngbTooltip]="tipMinLayerHeight"></i></label>
-          <input type="text" class="form-control" formControlName="min_layer_height">
+          <label>
+            Minimum layer height <i class="fa fa-info" [ngbTooltip]="tipMinLayerHeight"></i>
+            <input type="text" class="form-control" formControlName="min_layer_height">
+          </label>
         </div>
         <div class="form-group">
           <ng-template #tipMaxLayerHeight>Biggest printable vertical layerheight.<br /><b>Default: 0.1</b></ng-template>
-          <label>Maximum layer height <i class="fa fa-info" [ngbTooltip]="tipMaxLayerHeight"></i></label>
-          <input type="text" class="form-control" formControlName="max_layer_height">
+          <label>
+            Maximum layer height <i class="fa fa-info" [ngbTooltip]="tipMaxLayerHeight"></i>
+            <input type="text" class="form-control" formControlName="max_layer_height">
+          </label>
         </div>
         <div class="form-group">
           <ng-template #tipMinBurnTime>Time for the thinest set layerheight to cure under light.<br /><b>Default: 1.1</b></ng-template>
-          <label>Minimum burn time <i class="fa fa-info" [ngbTooltip]="tipMinBurnTime"></i></label>
-          <input type="number" class="form-control" formControlName="min_burn_time">
+          <label>
+            Minimum burn time <i class="fa fa-info" [ngbTooltip]="tipMinBurnTime"></i>
+            <input type="number" class="form-control" formControlName="min_burn_time">
+          </label>
         </div>
         <div class="form-group">
           <ng-template #tipMaxBurnTime>Time for the thickest set layerheight to cure under light.<br /><b>Default: 2</b></ng-template>
-          <label>Maximum burn time <i class="fa fa-info" [ngbTooltip]="tipMaxBurnTime"></i></label>
-          <input type="number" class="form-control" formControlName="max_burn_time">
+          <label>
+            Maximum burn time <i class="fa fa-info" [ngbTooltip]="tipMaxBurnTime"></i>
+            <input type="number" class="form-control" formControlName="max_burn_time">
+          </label>
         </div>
-        
-
       </ng-template>
     </ngb-tab>
     <ngb-tab title="Hardware">
       <ng-template ngbTabContent>
-
-        <div class="form-group">
+        <div class="form-group pt-3">
           <ng-template #tipPhysWidh>Physical width of projector screen in mm.<br /><b>Default: 154.7</b></ng-template>
-          <label>Physical width <i class="fa fa-info" [ngbTooltip]="tipPhysWidh"></i></label>
-          <input type="text" class="form-control" formControlName="phys_width">
+          <label>
+            Physical width <i class="fa fa-info" [ngbTooltip]="tipPhysWidh"></i>
+            <input type="text" class="form-control" formControlName="phys_width">
+          </label>
         </div>
         <div class="form-group">
           <ng-template #tipPhysHeight>Physical height of projector screen in mm.<br /><b>Default: 85.6</b></ng-template>
-          <label>Physical height <i class="fa fa-info" [ngbTooltip]="tipPhysHeight"></i></label>
-          <input type="text" class="form-control" formControlName="phys_height">
+          <label>
+            Physical height <i class="fa fa-info" [ngbTooltip]="tipPhysHeight"></i>
+            <input type="text" class="form-control" formControlName="phys_height">
+          </label>
         </div>
         <div class="form-group">
           <ng-template #tipEndstopIdleState>Which value does the endstop GPIO pin have when the endstop is not triggered.<br /><b>Default: 1</b></ng-template>
-          <label>Endstop idle value <i class="fa fa-info" [ngbTooltip]="tipEndstopIdleState"></i></label>
-          <input type="text" class="form-control" formControlName="endstop_idle_state">
+          <label>
+            Endstop idle value <i class="fa fa-info" [ngbTooltip]="tipEndstopIdleState"></i>
+            <input type="text" class="form-control" formControlName="endstop_idle_state">
+          </label>
         </div>
         <div class="form-group">
           <ng-template #tipEndstopTriggeredState>Which value does the endstop GPIO pin have when the endstop is triggered.<br /><b>Default: 0</b></ng-template>
-          <label>Endstop triggered value <i class="fa fa-info" [ngbTooltip]="tipEndstopTriggeredState"></i></label>
-          <input type="text" class="form-control" formControlName="endstop_triggered_state">
+          <label>
+            Endstop triggered value <i class="fa fa-info" [ngbTooltip]="tipEndstopTriggeredState"></i>
+            <input type="text" class="form-control" formControlName="endstop_triggered_state">
+          </label>
         </div>
-
         <div class="form-group">
           <ng-template #tipZMax>Maximum length from 0mm Z axis to the endstop.<br /><b>Default: 200.1</b></ng-template>
-          <label>Maximum Z height <i class="fa fa-info" [ngbTooltip]="tipZMax"></i></label>
-          <input type="text" class="form-control" formControlName="z_max">
+          <label>
+            Maximum Z height <i class="fa fa-info" [ngbTooltip]="tipZMax"></i>
+            <input type="text" class="form-control" formControlName="z_max">
+          </label>
         </div>
         <div class="form-group">
           <ng-template #tipZMinSpeed>The slowest posible travelspeed for Z axis in mm/s.<br /><b>Default: 2</b></ng-template>
-          <label>Minimum Z speed <i class="fa fa-info" [ngbTooltip]="tipZMinSpeed"></i></label>
-          <input type="text" class="form-control" formControlName="z_min_speed">
+          <label>
+            Minimum Z speed <i class="fa fa-info" [ngbTooltip]="tipZMinSpeed"></i>
+            <input type="text" class="form-control" formControlName="z_min_speed">
+          </label>
         </div>
         <div class="form-group">
           <ng-template #tipZMaxSpeed>The fastest posible travelspeed for Z axis in mm/s.<br /><b>Default: 15</b></ng-template>
-          <label>Maximum Z speed <i class="fa fa-info" [ngbTooltip]="tipZMaxSpeed"></i></label>
-          <input type="text" class="form-control" formControlName="z_max_speed">
+          <label>
+            Maximum Z speed <i class="fa fa-info" [ngbTooltip]="tipZMaxSpeed"></i>
+            <input type="text" class="form-control" formControlName="z_max_speed">
+          </label>
         </div>
         <div class="form-group">
           <ng-template #tipZAcceleration>Acceleration for Z axis in mm/s².<br /><b>Default: 300</b></ng-template>
-          <label>Z axis acceleration <i class="fa fa-info" [ngbTooltip]="tipZAcceleration"></i></label>
-          <input type="text" class="form-control" formControlName="z_acceleration">
+          <label>
+            Z axis acceleration <i class="fa fa-info" [ngbTooltip]="tipZAcceleration"></i>
+            <input type="text" class="form-control" formControlName="z_acceleration">
+          </label>
         </div>
         <div class="form-group">
           <ng-template #tipZSteps>Steps per mm at the Z axis.<br /><b>Default: 3200</b></ng-template>
-          <label>Z axis steps per mm <i class="fa fa-info" [ngbTooltip]="tipZSteps"></i></label>
-          <input type="text" class="form-control" formControlName="z_steps">
+          <label>
+            Z axis steps per mm <i class="fa fa-info" [ngbTooltip]="tipZSteps"></i>
+            <input type="text" class="form-control" formControlName="z_steps">
+          </label>
         </div>
 
       </ng-template>
     </ngb-tab>
   </ngb-tabset>
-  <button type="submit" class="btn btn-primary">Save</button>
+  <button type="submit" class="btn btn-primary mr-3" (click)="sendSettings($event)" >Save</button>
+  <button type="button" class="btn btn-danger" [ngbPopover]="popResetSettingsBody" [popoverTitle]="popResetSettingsHead" placement="bottom">Restore defaults</button>
+  <ng-template #popResetSettingsHead>Reset your printer settings to defaults</ng-template>
+  <ng-template #popResetSettingsBody>
+    <p>Are you sure you want to delete your changes?</p>
+    <button type="submit" class="btn btn-danger" (click)="resetSettings($event)" >Yes i am</button>
+  </ng-template>
 </form>

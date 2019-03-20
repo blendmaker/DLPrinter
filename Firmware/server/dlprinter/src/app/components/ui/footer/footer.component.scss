@@ -1,5 +1,8 @@
 span {
     white-space: nowrap;
+    &.light-button {
+        cursor: pointer;
+    }
 }
 i.fa-signal {
     color: maroon;

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WebSocketService } from 'src/app/services/web-socket.service';
-import { MessageInterface } from '../../../../../../../src/IpcWsMessages/MessageInterface';
+import { PrinterState } from '../../../../../../../src/printRunner';
 
 @Component({
   selector: 'app-status',
@@ -8,11 +8,18 @@ import { MessageInterface } from '../../../../../../../src/IpcWsMessages/Message
   styleUrls: ['./status.component.scss']
 })
 export class StatusComponent implements OnInit {
+  public state: PrinterState = {
+    printing: false,
+    z: 0,
+    light: false,
+  };
   constructor(private ws: WebSocketService) { }
 
   ngOnInit() {
-    this.ws.subscribe((message: MessageInterface) => {
-
+    this.ws.subscribe( data => {
+      switch (data.cmd) {
+        case 'state' : this.state = data.data; break;
+      }
     });
   }
 

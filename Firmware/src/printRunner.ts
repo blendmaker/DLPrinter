@@ -6,9 +6,11 @@ import { from, Observable, Subscriber } from 'rxjs';
 export class PrintRunner {
     //private svg: string;
     private layers: string[];
-    private _isPrinting: boolean = false;
-    private _zPos: number = 0.00;
-    private _light: boolean = false;
+    private state: PrinterState = {
+        printing: false,
+        light: false,
+        z: 0.0,
+    };
     private settings = new Settings();
     private builder = new Builder();
     private svgDir: string;
@@ -77,27 +79,22 @@ export class PrintRunner {
             return;
         }
         
-        this._isPrinting = true;
+        this.state.printing = true;
 
         setTimeout(() => {
-            console.log('timeout');
-            while(this._isPrinting) {
+            while(this.state.printing) {
                 this.tickPrint();
             }
         });
         // how to do that? iterate over simplesteps or do a per layer loop?
     }
 
-    public getState() {
-        return {
-            printing : this._isPrinting,
-            z : this._zPos,
-            light : this._light,
-        }
+    public getState(): PrinterState {
+        return this.state;
     }
 
     public triggerLight() {
-        this._light = !this._light;
+        this.state.light = !this.state.light;
     }
  
     i=0;
@@ -105,9 +102,9 @@ export class PrintRunner {
         this.i++;
 
         if (this.i>100000) {
-            this._isPrinting = false;
+            this.state.printing = false;
         }
-        if (!this._isPrinting) {
+        if (!this.state.printing) {
             console.log('print stopped');
         }
         /*mainWindow.webContents.send('svg-layer', { 'layer' : 
@@ -139,4 +136,10 @@ function tickPrint() {
 
 
     */
+}
+
+export interface PrinterState {
+    printing: boolean;
+    z: number;
+    light: boolean;
 }

@@ -25,21 +25,16 @@ export class FooterComponent implements OnInit {
 
   ngOnInit() {
     this.webSocketService.subscribe((msg: MessageInterface|string|any) => {
-      if (typeof msg === 'string') {
-        msg = JSON.parse(msg);
-
-        if (msg.cmd === 'state') {
-          this.printerStatus = msg.data;
-        }
+      if (msg.cmd === 'state') {
+        this.printerStatus = msg.data;
       }
     });
     interval(2000).subscribe(() => {
-      this.connected = this.webSocketService.send({cmd : 'heartbeat', data : {}});
+      this.connected = this.webSocketService.send({ cmd : 'heartbeat' });
     });
   }
 
-  triggerLight(event$: any) {
-    console.log(event$);
+  triggerLight() {
     this.webSocketService.send({ cmd : 'light' });
   }
 }
