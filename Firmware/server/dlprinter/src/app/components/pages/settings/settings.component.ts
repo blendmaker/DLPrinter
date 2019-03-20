@@ -34,9 +34,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   constructor(private ws: WebSocketService, private settingsService: SettingsService) { }
 
   ngOnInit() {
-    console.log('Settings Component initialized');
     this.subscriber.push(this.settingsService.getSettingsData().subscribe( data => {
-      console.error('settings applied to form controls');
       this.settingsToControls(data);
     }));
   }
