@@ -1,14 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebSocketService } from 'src/app/services/web-socket.service';
-import { PrinterState } from '../../../../../../../src/printRunner';
+import { Subscription } from 'rxjs';
+import { filter, first } from 'rxjs/operators';
+import { FileMeta } from '../../../../../../../src/interfaces/FileMeta';
+import { PrinterState } from '../../../../../../../src/interfaces/PrinterState';
 
 @Component({
   selector: 'app-status',
   templateUrl: './status.component.html',
   styleUrls: ['./status.component.scss']
 })
-export class StatusComponent implements OnInit {
-  public state: PrinterState = {
+export class StatusComponent implements OnInit, OnDestroy {
+  private subscription: Subscription[] = [];
+  protected files: FileMeta[] = [];
+  protected state: PrinterState = {
     printing: false,
     z: 0,
     light: false,
@@ -16,23 +21,29 @@ export class StatusComponent implements OnInit {
   constructor(private ws: WebSocketService) { }
 
   ngOnInit() {
-    this.ws.subscribe( data => {
-      switch (data.cmd) {
-        case 'state' : this.state = data.data; break;
-      }
-    });
+    this.subscription.push(
+      this.ws.subscribe( msg => {
+        switch (msg.cmd) {
+          case 'state' : this.state = msg.data; break;
+          case 'get-files' : this.files = msg.data; break;
+        }
+      })
+    );
+    this.ws.connected.pipe( filter(connected => connected), first() ).subscribe( () => this.ws.send({ cmd : 'get-files' }) );
   }
 
-  protected textClicked () {
-    this.ws.send({ cmd: 'text', data: 'Ich in ein Test', });
+  ngOnDestroy(): void {
+    this.subscription.forEach( subscription => subscription.unsubscribe() );
+    this.subscription = [];
   }
-  protected whiteClicked () {
-    this.ws.send({ cmd: 'color', data: 'white', });
+
+  protected printFile(file: FileMeta) {
   }
-  protected blackClicked () {
-    this.ws.send({ cmd: 'color', data: 'black', });
+
+  protected inspectFile(file: FileMeta) {
   }
-  protected layerClicked () {
-    this.ws.send({ cmd: 'layer', data: {}, });
+
+  protected deleteFile(file: FileMeta) {
+    this.ws.send({ cmd: 'delete-file', data: file });
   }
 }

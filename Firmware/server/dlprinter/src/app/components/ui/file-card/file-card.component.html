@@ -1,0 +1,30 @@
+<div class="card mb-4">
+  <img *ngIf="data.image" src="data.image" class="card-img-top" [alt]="data.name">
+  <i *ngIf="!data.image" class="fa fa-image no-image mt-3"></i>
+  <div class="card-body">
+    <h5 class="card-title">{{ data.name }}</h5>
+    <p class="card-text" *ngIf="data.description" [innerHtml]="data.description"></p>
+    <p class="card-text">
+      Type: {{ data.type }}
+    </p>
+  </div>
+  <div class="card-footer btn-group" role="group" aria-label="Fileactions">
+    <button type="button" class="btn btn-secondary" (click)="print.emit(data)">
+        <span class="sr-only">Print {{ data.name }}</span>
+        <i class="fa" [class.fa-print]="data.type === 'svg'"  [class.fa-magic]="data.type === 'stl'"></i>
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="inspect.emit(data)">
+        <span class="sr-only">Inspect {{ data.name }}</span>
+        <i class="fa fa-edit"></i>
+    </button>
+    <button type="button" class="btn btn-secondary" [ngbPopover]="popDeleteFile" [popoverTitle]="popDeleteFileHead">
+        <span class="sr-only">Delete {{ data.name }}</span>
+      <i class="fa fa-trash"></i>
+    </button>
+  </div>
+</div>
+<ng-template #popDeleteFileHead>Delete {{ data.name }}?</ng-template>
+<ng-template #popDeleteFile>
+  <p>Are you sure you want to delete this file?</p>
+  <button type="submit" class="btn btn-danger" (click)="delete.emit(data)" >Yes</button>
+</ng-template>

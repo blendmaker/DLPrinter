@@ -15,5 +15,10 @@
     <span (click)="triggerLight()" role="button" class="light-button" ngbTooltip="Click to manually trigger the Lamp on the printer">
       light: <i class="fa fa-lightbulb-o" [ngClass]="printerStatus.light?'on':''"></i>
     </span>
+
+    <button type="button" class="btn btn-sm btn-secondary ml-3 mr-2" (click)="whiteClicked();">White screen</button>
+    <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="blackClicked();">Black screen</button>
+    <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="textClicked();">Print text</button>
+    <button type="button" class="btn btn-sm btn-secondary mr-2" (click)="layerClicked();">Print layer</button>
   </div>
 </nav>

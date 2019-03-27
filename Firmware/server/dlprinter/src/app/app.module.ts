@@ -12,6 +12,7 @@ import { PrintComponent } from './components/pages/print/print.component';
 import { SettingsComponent } from './components/pages/settings/settings.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DisconnectedDisplayComponent } from './components/ui/disconnected-display/disconnected-display.component';
+import { FileCardComponent } from './components/ui/file-card/file-card.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { DisconnectedDisplayComponent } from './components/ui/disconnected-displ
     PrintComponent,
     SettingsComponent,
     DisconnectedDisplayComponent,
+    FileCardComponent,
   ],
   imports: [
     BrowserModule,

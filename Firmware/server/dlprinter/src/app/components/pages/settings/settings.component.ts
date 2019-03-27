@@ -1,7 +1,6 @@
-import { SettingsData } from './../../../../../../../src/Settings';
+import { SettingsData } from './../../../../../../../src/interfaces/SettingsData';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { WebSocketService } from 'src/app/services/web-socket.service';
 import { first } from 'rxjs/operators';
 import { SettingsService } from 'src/app/services/settings.service';
 import { Subscription } from 'rxjs';
@@ -12,7 +11,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit, OnDestroy {
-  form: FormGroup = new FormGroup({
+  protected form: FormGroup = new FormGroup({
     port: new FormControl('', [ Validators.required ]),
     phys_width: new FormControl('', [ Validators.required ]),
     phys_height: new FormControl('', [ Validators.required ]),
@@ -29,21 +28,19 @@ export class SettingsComponent implements OnInit, OnDestroy {
     z_steps: new FormControl('', [ Validators.required ]),
     security: new FormControl(false),
   });
-  subscriber: Subscription[] = [];
+  private subscription: Subscription[] = [];
 
-  constructor(private ws: WebSocketService, private settingsService: SettingsService) { }
+  constructor(private settingsService: SettingsService) { }
 
   ngOnInit() {
-    this.subscriber.push(this.settingsService.getSettingsData().subscribe( data => {
+    this.subscription.push(this.settingsService.getSettingsData().subscribe( data => {
       this.settingsToControls(data);
     }));
   }
 
   ngOnDestroy(): void {
-    this.subscriber.forEach(element => {
-      element.unsubscribe();
-    });
-    this.subscriber = [];
+    this.subscription.forEach(subscription => subscription.unsubscribe() );
+    this.subscription = [];
   }
 
   protected resetSettings($event: Event) {
@@ -55,7 +52,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     $event.preventDefault();
 
     // TODO handle slicer settings
-    this.subscriber.push(this.settingsService.getSettingsData().pipe( first() ).subscribe( data => {
+    this.subscription.push(this.settingsService.getSettingsData().pipe( first() ).subscribe( data => {
       for (const key in this.form.controls) {
         if (this.form.controls.hasOwnProperty(key)) {
             data[key] = this.form.controls[key].value;

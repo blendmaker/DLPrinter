@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { Settings } from '../../src/settings';
 import { IpcRendererSubject } from '../../src/IpcSubjects';
-import { MessageInterface } from '../../src/IpcWsMessages/MessageInterface';
+import { MessageInterface } from '../../src/interfaces/MessageInterface';
 
 const settings = new Settings();
 const ipc = new IpcRendererSubject();
@@ -17,38 +17,38 @@ let pixelWidth: number;
 
 ipc.subscribe((msg: MessageInterface) => {
     switch (msg.cmd) {
-        case 'color' : color(msg); break;
-        case 'text': text(msg); break;
+        case 'text'  : text(msg);     break;
+        case 'color' : color(msg);    break;
         case 'layer' : svgLayer(msg); break;
-        case 'center': center(msg); break;
+        case 'center': center(msg);   break;
     }
 });
 
-function svgLayer(a:MessageInterface){
-    gScale.html(a.data);
+function svgLayer(msg: MessageInterface){
+    gScale.html(msg.data);
 }
 
-function center(a:MessageInterface) {
+function center(msg: MessageInterface) {
     // transform half the object size to pixel
     const pixelPerMmX = pixelWidth/phys_width;
     const pixelPerMmY = pixelHeight/phys_height;
     const cX = pixelWidth/2;
     const cY = pixelHeight/2;
-    const pX = (cX-(pixelPerMmX*(a.data.w/2))).toFixed(3);
-    const pY = (cY-(pixelPerMmY*(a.data.h)/2)).toFixed(3);
+    const pX = (cX-(pixelPerMmX*(msg.data.w/2))).toFixed(3);
+    const pY = (cY-(pixelPerMmY*(msg.data.h)/2)).toFixed(3);
 
     gPos.attr('transform', "translate(" + pX + " " + pY + ")");
 }
 
-function color(a:MessageInterface){
-    svg.style('background-color', a.data);
-    pText.style('color', a.data==='white'?'black':'white');
+function color(msg: MessageInterface){
+    svg.style('background-color', msg.data);
+    pText.style('color', msg.data === 'white' ? 'black' : 'white');
     pText.html("");
     gScale.html("");
 }
 
-function text(a:MessageInterface){
-    pText.html(a.data);
+function text(msg: MessageInterface){
+    pText.html(msg.data);
 }
 
 document.addEventListener('DOMContentLoaded', function(){

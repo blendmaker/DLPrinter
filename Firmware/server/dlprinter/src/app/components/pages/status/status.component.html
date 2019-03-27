@@ -1,12 +1,16 @@
-<h1>
+<h1 class="mb-4">
   Printerstatus: 
   <span class="badge badge-success" *ngIf="state.printing">Printing</span>
   <span class="badge badge-secondary" *ngIf="!state.printing">Idling</span>
 </h1>
 
-<div class="jumbotron">
-  <button type="button" class="btn btn-primary mr-2" (click)="whiteClicked();">White screen</button>
-  <button type="button" class="btn btn-primary mr-2" (click)="blackClicked();">Black screen</button>
-  <button type="button" class="btn btn-primary mr-2" (click)="textClicked();">Print text</button>
-  <button type="button" class="btn btn-primary mr-2" (click)="layerClicked();">Print layer</button>
+<div class="clearfix">
+  <app-file-card
+    *ngFor="let file of files"
+    [data]="file"
+    (print)="printFile($event)"
+    (inspect)="inspectFile($event)"
+    (delete)="deleteFile($event)"
+    class="col-md-4 col-sm-6">
+  </app-file-card>
 </div>

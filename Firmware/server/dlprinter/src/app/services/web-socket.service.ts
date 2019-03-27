@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { MessageInterface } from '../../../../../src/IpcWsMessages/MessageInterface';
+import { MessageInterface } from '../../../../../src/interfaces/MessageInterface';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,6 @@ export class WebSocketService extends BehaviorSubject<MessageInterface> {
   private ws: WebSocket;
   private data: MessageInterface;
   public connected: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  // private connectionListener: (() => void)[] = [];
 
   constructor() {
     super({ cmd : '' });
@@ -23,27 +22,11 @@ export class WebSocketService extends BehaviorSubject<MessageInterface> {
       message = JSON.stringify(message);
     }
     if (this.connect()) {
-      // this.connected.next(true);
-      /*while (this.connectionListener.length > 0) {
-        const fn = this.connectionListener[0];
-        this.connectionListener.shift();
-        fn();
-      }*/
       this.ws.send(message);
       return true;
     }
-    // this.connected.next(false);
     return false;
   }
-
-  /*public waitForConnection(listener: () => void) {
-    // connection open? if not, try to connect
-    if (this.ws && this.ws.readyState === this.ws.OPEN || this.connect()) {
-      listener();
-    } else {
-      this.connectionListener.push(listener);
-    }
-  }*/
 
   public getValue() {
     return this.data;

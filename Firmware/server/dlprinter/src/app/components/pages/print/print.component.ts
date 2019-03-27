@@ -1,22 +1,30 @@
-import { PrinterState } from './../../../../../../../src/printRunner';
-import { MessageInterface } from './../../../../../../../src/IpcWsMessages/MessageInterface';
 import { WebSocketService } from './../../../services/web-socket.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { PrinterState } from '../../../../../../../src/interfaces/PrinterState';
 
 @Component({
   selector: 'app-print',
   templateUrl: './print.component.html',
   styleUrls: ['./print.component.scss']
 })
-export class PrintComponent implements OnInit {
-  public state: PrinterState;
+export class PrintComponent implements OnInit, OnDestroy {
+  protected state: PrinterState;
+  private subscription: Subscription[] = [];
   constructor(private ws: WebSocketService) { }
 
   ngOnInit() {
-    this.ws.subscribe( data => {
-      switch (data.cmd) {
-        case 'state' : this.state = data.data; break;
-      }
-    });
+    this.subscription.push(
+      this.ws.subscribe( msg => {
+        switch (msg.cmd) {
+          case 'state' : this.state = msg.data; break;
+        }
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.forEach( subscription => subscription.unsubscribe() );
+    this.subscription = [];
   }
 }

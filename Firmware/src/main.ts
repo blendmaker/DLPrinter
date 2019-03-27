@@ -1,12 +1,15 @@
-import { app, BrowserWindow } from 'electron'
-import * as path from 'path'
-import { Settings } from './Settings'
-import { PrintRunner } from './PrintRunner'
+import { app, BrowserWindow } from 'electron';
+import * as path from 'path';
+import { Settings } from './Settings';
+import { PrintRunner } from './PrintRunner';
+import { FileMeta } from './interfaces/FileMeta';
 import { format as urlFormat } from 'url';
 import * as expressWs from 'express-ws';
 import * as express from 'express';
 import { IpcMainSubject } from './IpcSubjects'
-import { MessageInterface } from './IpcWsMessages/MessageInterface';
+import { MessageInterface } from './interfaces/MessageInterface';
+import { forkJoin } from 'rxjs';
+import { unlink } from 'fs';
 
 const expApp = express();
 const settings = new Settings();
@@ -26,7 +29,7 @@ function layerCallback(currentLayer: string) {
 }
 
 function setupServer() {
-    // TODO 3 of 4 communication parts went to other classes... a better approach for this? invest...
+    // TODO 3 of 4 communication parts went to other classes... a better approach for this? investigate...
     expressWs(expApp).app.ws('/', (ws, req: express.Request) => {
         ws.on('message', (input:string) => {
             let msg: MessageInterface = JSON.parse(input);
@@ -56,6 +59,40 @@ function setupServer() {
                     msg.data = settings.resetToDefaults();
                     wsSend(msg);
                     break;
+                case 'get-files' :
+                    forkJoin(
+                        printRunner.getLocalFiles( printRunner.svgDir ),
+                        printRunner.getLocalFiles( printRunner.modelDir )
+                        // TODO handle custom folders
+                    ).subscribe( files => {
+                        const data: FileMeta[] = [];
+                        files.forEach( element => data.push(...element) );
+                        msg.data = data;
+                        wsSend(msg);
+                    });
+                    break;
+                case 'delete-file' :
+                    forkJoin(
+                        printRunner.getLocalFiles( printRunner.svgDir ),
+                        printRunner.getLocalFiles( printRunner.modelDir )
+                        // TODO handle custom folders
+                    ).subscribe( files => {
+                        const data: FileMeta[] = [];
+                        files.forEach( element => data.push(...element) );
+                        data.forEach( (file, i, arr) => {
+                            if ( (file.path) === (msg.data.path) ) {
+                                unlink( file.path, (err) => err? console.error(err) : null );
+                                arr.splice(i, 1);
+                                return null;
+                            }
+                        });
+                        msg.cmd = 'get-files';
+                        msg.data = data;
+                        wsSend(msg);
+                    });
+                    break;
+                case 'file-upload' :
+                    break;
                 case 'light' :
                     printRunner.triggerLight(); // no break for new state
                 case 'heartbeat' :
@@ -65,8 +102,6 @@ function setupServer() {
                     break;
                 case 'layer' :
                     let svgSize = printRunner.loadSvg(settings.getHome() + '/svg/example_cube.svg');
-                    // ipc.send({ cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
-                    // mainWindow.webContents.send('message', { cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
                     ipc.send({ cmd: 'center', data: { 'w' : svgSize.width, 'h' : svgSize.height }});
                     printRunner.startPrint();
                     break;
@@ -108,9 +143,9 @@ function setupIpc() {
 }
 
 // Electron-quick-start template functions
-app.on('ready', init)
-app.on('window-all-closed', function() { if (process.platform !== 'darwin') { app.quit() } })
-app.on('activate', function() { if (mainWindow === null) { setupWindow() } })
+app.on('ready', init);
+app.on('window-all-closed', function() { if (process.platform !== 'darwin') { app.quit() } });
+app.on('activate', function() { if (mainWindow === null) { setupWindow() } });
 
 /*
 echo 1 > /sys/class/gpio/gpio12/value
@@ -120,6 +155,3 @@ echo 0 > /sys/class/gpio/gpio1/value
 echo 0 > /sys/class/gpio/gpio0/value
 echo 0 > /sys/class/gpio/gpio3/value
 */
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.

@@ -1,9 +1,9 @@
 import { filter, first } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { WebSocketService } from './web-socket.service';
-import { SettingsData } from '../../../../../src/Settings';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { MessageInterface } from '../../../../../src/IpcWsMessages/MessageInterface';
+import { SettingsData } from '../../../../../src/interfaces/SettingsData';
+import { BehaviorSubject } from 'rxjs';
+import { MessageInterface } from '../../../../../src/interfaces/MessageInterface';
 
 @Injectable({
     providedIn: 'root'
@@ -22,7 +22,7 @@ export class SettingsService {
             }
         });
         ws.connected.pipe(
-            filter( connected => connected ),
+            filter( connected => connected ), // only run upon successfull connection
             first()
         ).subscribe( () => {
             ws.send({ cmd: 'get-settings' });
