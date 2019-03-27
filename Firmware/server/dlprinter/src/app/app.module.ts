@@ -7,7 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HeaderComponent } from './components/ui/header/header.component';
 import { FooterComponent } from './components/ui/footer/footer.component';
 import { WebSocketService } from './services/web-socket.service';
-import { StatusComponent } from './components/pages/status/status.component';
+import { FilesComponent } from './components/pages/files/files.component';
 import { PrintComponent } from './components/pages/print/print.component';
 import { SettingsComponent } from './components/pages/settings/settings.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -20,7 +20,7 @@ import { DebugButtonsComponent } from './components/ui/debug-buttons/debug-butto
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    StatusComponent,
+    FilesComponent,
     PrintComponent,
     SettingsComponent,
     DisconnectedDisplayComponent,

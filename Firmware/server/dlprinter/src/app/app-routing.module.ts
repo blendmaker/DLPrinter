@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PrintComponent } from './components/pages/print/print.component';
-import { StatusComponent } from './components/pages/status/status.component';
+import { FilesComponent } from './components/pages/files/files.component';
 import { SettingsComponent } from './components/pages/settings/settings.component';
 
 const routes: Routes = [
   {
     path: 'home',
-    component: StatusComponent,
+    component: FilesComponent,
   },
   {
     path: 'print',

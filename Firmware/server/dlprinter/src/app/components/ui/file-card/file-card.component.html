@@ -1,6 +1,6 @@
 <div class="card mb-4">
   <img *ngIf="data.image" src="data.image" class="card-img-top" [alt]="data.name">
-  <i *ngIf="!data.image" class="fa fa-image no-image mt-3"></i>
+  <i *ngIf="!data.image" class="fa fa-image no-image text-secondary mt-3"></i>
   <div class="card-body">
     <h5 class="card-title">{{ data.name }}</h5>
     <p class="card-text" *ngIf="data.description" [innerHtml]="data.description"></p>
@@ -9,15 +9,21 @@
     </p>
   </div>
   <div class="card-footer btn-group" role="group" aria-label="Fileactions">
-    <button type="button" class="btn btn-secondary" (click)="print.emit(data)">
-        <span class="sr-only">Print {{ data.name }}</span>
-        <i class="fa" [class.fa-print]="data.type === 'svg'"  [class.fa-magic]="data.type === 'stl'"></i>
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="print.emit(data)"
+      [disabled]="(data.type !== 'svg' && data.type !== 'stl')"
+      ngbTooltip="{{ data.type === 'svg' ? 'Print' : data.type === 'stl' ? 'Slice' : '' }}">
+
+        <span class="sr-only" [innerHtml]="(data.type === 'svg' ? 'Print ' : data.type === 'stl' ? 'Slice ' : '') + data.name"></span>
+        <i class="fa" [class.fa-print]="data.type === 'svg'"  [class.fa-tasks]="data.type === 'stl'"></i>
     </button>
-    <button type="button" class="btn btn-secondary" (click)="inspect.emit(data)">
+    <button type="button" class="btn btn-secondary" (click)="inspect.emit(data)" ngbTooltip="Inspect">
         <span class="sr-only">Inspect {{ data.name }}</span>
         <i class="fa fa-edit"></i>
     </button>
-    <button type="button" class="btn btn-secondary" [ngbPopover]="popDeleteFile" [popoverTitle]="popDeleteFileHead">
+    <button type="button" class="btn btn-secondary" [ngbPopover]="popDeleteFile" [popoverTitle]="popDeleteFileHead" ngbTooltip="Delete">
         <span class="sr-only">Delete {{ data.name }}</span>
       <i class="fa fa-trash"></i>
     </button>

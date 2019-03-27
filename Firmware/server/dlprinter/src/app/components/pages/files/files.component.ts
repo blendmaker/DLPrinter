@@ -1,16 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebSocketService } from 'src/app/services/web-socket.service';
+import { SessionStorageService } from 'src/app/services/session-storage.service';
 import { Subscription } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 import { FileMeta } from '../../../../../../../src/interfaces/FileMeta';
 import { PrinterState } from '../../../../../../../src/interfaces/PrinterState';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-status',
-  templateUrl: './status.component.html',
-  styleUrls: ['./status.component.scss']
+  selector: 'app-files',
+  templateUrl: './files.component.html',
+  styleUrls: ['./files.component.scss']
 })
-export class StatusComponent implements OnInit, OnDestroy {
+export class FilesComponent implements OnInit, OnDestroy {
   private subscription: Subscription[] = [];
   protected files: FileMeta[] = [];
   protected state: PrinterState = {
@@ -18,7 +20,13 @@ export class StatusComponent implements OnInit, OnDestroy {
     z: 0,
     light: false,
   };
-  constructor(private ws: WebSocketService) { }
+  protected optionsForm = new FormGroup({
+    displaySvg: new FormControl(),
+    displayStl: new FormControl(),
+    displayOthers: new FormControl(),
+    itemCount: new FormControl(),
+  });
+  constructor(private ws: WebSocketService, protected sessionStorageService: SessionStorageService) { }
 
   ngOnInit() {
     this.subscription.push(
@@ -29,6 +37,16 @@ export class StatusComponent implements OnInit, OnDestroy {
         }
       })
     );
+
+    this.subscription.push(
+      this.optionsForm.valueChanges.subscribe(
+        formData => {
+          console.log(formData);
+          this.sessionStorageService.filesDisplayOptions.next( formData );
+        }
+      )
+    );
+
     this.ws.connected.pipe( filter(connected => connected), first() ).subscribe( () => this.ws.send({ cmd : 'get-files' }) );
   }
 
