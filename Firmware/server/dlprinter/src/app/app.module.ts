@@ -13,6 +13,7 @@ import { SettingsComponent } from './components/pages/settings/settings.componen
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DisconnectedDisplayComponent } from './components/ui/disconnected-display/disconnected-display.component';
 import { FileCardComponent } from './components/ui/file-card/file-card.component';
+import { DebugButtonsComponent } from './components/ui/debug-buttons/debug-buttons.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { FileCardComponent } from './components/ui/file-card/file-card.component
     SettingsComponent,
     DisconnectedDisplayComponent,
     FileCardComponent,
+    DebugButtonsComponent,
   ],
   imports: [
     BrowserModule,

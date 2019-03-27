@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, isDevMode } from '@angular/core';
 import { WebSocketService } from 'src/app/services/web-socket.service';
 import { interval, Subscription } from 'rxjs';
 import { MessageInterface } from '../../../../../../../src/interfaces/MessageInterface';
@@ -16,8 +16,9 @@ export class FooterComponent implements OnInit, OnDestroy {
     z : 0.0,
     light : false,
   };
+  protected isDebug = isDevMode;
 
-  tooltipConnection = [
+  protected tooltipConnection = [
     'You are currently connected to the printer.',
     'No connection to printer present.'
   ];
@@ -42,19 +43,7 @@ export class FooterComponent implements OnInit, OnDestroy {
     this.subscription = [];
   }
 
-  triggerLight() {
+  protected triggerLight() {
     this.ws.send({ cmd : 'light' });
-  }
-  protected textClicked () {
-    this.ws.send({ cmd: 'text', data: 'Ich in ein Test', });
-  }
-  protected whiteClicked () {
-    this.ws.send({ cmd: 'color', data: 'white', });
-  }
-  protected blackClicked () {
-    this.ws.send({ cmd: 'color', data: 'black', });
-  }
-  protected layerClicked () {
-    this.ws.send({ cmd: 'layer', data: {}, });
   }
 }

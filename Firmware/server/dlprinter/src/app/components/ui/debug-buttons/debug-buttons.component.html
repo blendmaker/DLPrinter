@@ -1,0 +1,9 @@
+<div ngbDropdown placement="top-left" class="d-inline-block">
+  <button class="btn btn-secondary" id="dropdownDebug" ngbDropdownToggle><i class="fa fa-code"></i></button>
+  <div ngbDropdownMenu aria-labelledby="dropdownDebug">
+    <button ngbDropdownItem class="btn btn-sm" (click)="whiteClicked();">White screen</button>
+    <button ngbDropdownItem class="btn btn-sm" (click)="blackClicked();">Black screen</button>
+    <button ngbDropdownItem class="btn btn-sm" (click)="textClicked();">Print text</button>
+    <button ngbDropdownItem class="btn btn-sm" (click)="layerClicked();">Print layer</button>
+  </div>
+</div>
