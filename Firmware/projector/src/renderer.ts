@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { Settings } from '../../src/settings';
 import { IpcRendererSubject } from '../../src/IpcSubjects';
-import { MessageInterface } from '../../src/interfaces/MessageInterface';
+import { Message } from '../../src/interfaces/Message';
 
 const settings = new Settings();
 const ipc = new IpcRendererSubject();
@@ -15,7 +15,7 @@ const phys_height = settings.getSettingsData().phys_height;
 let pixelHeight: number;
 let pixelWidth: number;
 
-ipc.subscribe((msg: MessageInterface) => {
+ipc.subscribe((msg: Message) => {
     switch (msg.cmd) {
         case 'text'  : text(msg);     break;
         case 'color' : color(msg);    break;
@@ -24,11 +24,11 @@ ipc.subscribe((msg: MessageInterface) => {
     }
 });
 
-function svgLayer(msg: MessageInterface){
+function svgLayer(msg: Message){
     gScale.html(msg.data);
 }
 
-function center(msg: MessageInterface) {
+function center(msg: Message) {
     // transform half the object size to pixel
     const pixelPerMmX = pixelWidth/phys_width;
     const pixelPerMmY = pixelHeight/phys_height;
@@ -40,14 +40,14 @@ function center(msg: MessageInterface) {
     gPos.attr('transform', "translate(" + pX + " " + pY + ")");
 }
 
-function color(msg: MessageInterface){
+function color(msg: Message){
     svg.style('background-color', msg.data);
     pText.style('color', msg.data === 'white' ? 'black' : 'white');
     pText.html("");
     gScale.html("");
 }
 
-function text(msg: MessageInterface){
+function text(msg: Message){
     pText.html(msg.data);
 }
 

@@ -3,9 +3,13 @@
   <i *ngIf="!data.image" class="fa fa-image no-image text-secondary mt-3"></i>
   <div class="card-body">
     <h5 class="card-title">{{ data.name }}</h5>
-    <p class="card-text" *ngIf="data.description" [innerHtml]="data.description"></p>
+    <p class="card-text" *ngIf="data.description">{{ data.description }}</p>
     <p class="card-text">
       Type: {{ data.type }}
+      <br />
+      Date: {{ data.dateTime | date }}
+      <br />
+      Size: {{ (data.size / 1024 / 1024) | number:'1.2-2' }} MB
     </p>
   </div>
   <div class="card-footer btn-group" role="group" aria-label="Fileactions">

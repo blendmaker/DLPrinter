@@ -1,6 +1,6 @@
 import { Settings } from './Settings';
 import { Builder, parseString } from 'Xml2js';
-import { existsSync, mkdirSync, readdir, readFileSync, unlink } from 'fs';
+import { existsSync, mkdirSync, readdir, readFileSync, unlink, statSync, fstat } from 'fs';
 import { parse as parsePath, join } from 'path';
 import { from, Observable, Subscriber } from 'rxjs';
 import { FileMeta } from './interfaces/FileMeta';
@@ -15,15 +15,18 @@ export class PrintRunner {
     };
     private settings = new Settings();
     private builder = new Builder();
-    public svgDir: string;
     public modelDir: string;
+    public svgDir: string;
+    public gcodeDir: string;
 
     constructor(private layerCallback: (layer: string) => void) {
         // check for existence of svg/stl folders
         this.modelDir = this.settings.getHome() + '/models';
         this.svgDir = this.settings.getHome() + '/svg';
+        this.gcodeDir = this.settings.getHome() + '/gcodes';
         if (! existsSync(this.svgDir)) { mkdirSync(this.svgDir); }
         if (! existsSync(this.modelDir)) { mkdirSync(this.modelDir); }
+        if (! existsSync(this.gcodeDir)) { mkdirSync(this.gcodeDir); }
     }
 
     public getLocalFiles(path: string): Observable<FileMeta[]> {
@@ -33,12 +36,17 @@ export class PrintRunner {
                     // TODO stuff results with meta data
                     const data: FileMeta[] = files.map( file => {
                         const f = parsePath(path + '/' + file);
-                        return { 
+                        if (f.name.startsWith('.')) { return; }
+
+                        const fStat = statSync(path + '/' + file);
+                        return {
                             name: f.name,
                             path: path + '/' + file,
+                            size: fStat.size,
+                            dateTime: new Date(fStat.ctime),
                             type: f.ext.replace('.', '')
                         };
-                    });
+                    }).filter( file => !!file );
                     subscriber.next(data);
                 }
                 subscriber.complete();

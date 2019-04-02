@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { WebSocketService } from './web-socket.service';
 import { SettingsData } from '../../../../../src/interfaces/SettingsData';
 import { BehaviorSubject } from 'rxjs';
-import { MessageInterface } from '../../../../../src/interfaces/MessageInterface';
+import { Message } from '../../../../../src/interfaces/Message';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +13,7 @@ export class SettingsService {
     private settingsReceived: BehaviorSubject<SettingsData> = new BehaviorSubject(null);
 
     constructor(private ws: WebSocketService) {
-        ws.subscribe((msg: MessageInterface) => {
+        ws.subscribe((msg: Message) => {
             switch (msg.cmd) {
               case 'get-settings' :
                 this.settings = msg.data;

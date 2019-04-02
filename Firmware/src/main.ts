@@ -7,7 +7,7 @@ import { format as urlFormat } from 'url';
 import * as expressWs from 'express-ws';
 import * as express from 'express';
 import { IpcMainSubject } from './IpcSubjects'
-import { MessageInterface } from './interfaces/MessageInterface';
+import { Message } from './interfaces/Message';
 import { forkJoin } from 'rxjs';
 import { unlink } from 'fs';
 
@@ -32,8 +32,8 @@ function setupServer() {
     // TODO 3 of 4 communication parts went to other classes... a better approach for this? investigate...
     expressWs(expApp).app.ws('/', (ws, req: express.Request) => {
         ws.on('message', (input:string) => {
-            let msg: MessageInterface = JSON.parse(input);
-            const wsSend = (data : MessageInterface) => {
+            let msg: Message = JSON.parse(input);
+            const wsSend = (data : Message) => {
                 ws.send(JSON.stringify(data));
             }
 
@@ -62,7 +62,8 @@ function setupServer() {
                 case 'get-files' :
                     forkJoin(
                         printRunner.getLocalFiles( printRunner.svgDir ),
-                        printRunner.getLocalFiles( printRunner.modelDir )
+                        printRunner.getLocalFiles( printRunner.modelDir ),
+                        printRunner.getLocalFiles( printRunner.gcodeDir )
                         // TODO handle custom folders
                     ).subscribe( files => {
                         const data: FileMeta[] = [];
@@ -74,7 +75,8 @@ function setupServer() {
                 case 'delete-file' :
                     forkJoin(
                         printRunner.getLocalFiles( printRunner.svgDir ),
-                        printRunner.getLocalFiles( printRunner.modelDir )
+                        printRunner.getLocalFiles( printRunner.modelDir ),
+                        printRunner.getLocalFiles( printRunner.gcodeDir )
                         // TODO handle custom folders
                     ).subscribe( files => {
                         const data: FileMeta[] = [];
@@ -135,7 +137,7 @@ function setupWindow() {
 
 function setupIpc() {
     ipc = new IpcMainSubject(mainWindow.webContents.send.bind(mainWindow.webContents));
-    ipc.subscribe((msg: MessageInterface) => {
+    ipc.subscribe((msg: Message) => {
         switch (msg.cmd) {
             case '' : break;
         }

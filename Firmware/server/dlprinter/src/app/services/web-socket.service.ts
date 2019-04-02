@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { MessageInterface } from '../../../../../src/interfaces/MessageInterface';
+import { Message } from '../../../../../src/interfaces/Message';
 
 @Injectable({
   providedIn: 'root'
 })
-export class WebSocketService extends BehaviorSubject<MessageInterface> {
+export class WebSocketService extends BehaviorSubject<Message> {
   private wsUrl = environment.wsUrl;
   private ws: WebSocket;
-  private data: MessageInterface;
+  private data: Message;
   public connected: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor() {
@@ -17,7 +17,7 @@ export class WebSocketService extends BehaviorSubject<MessageInterface> {
     this.connect();
   }
 
-  public send(message: MessageInterface | string) {
+  public send(message: Message | string) {
     if (typeof message !== 'string') {
       message = JSON.stringify(message);
     }

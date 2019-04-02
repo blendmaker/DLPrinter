@@ -1,7 +1,8 @@
 export interface FileMeta {
   path: string;
   name: string;
-  // TODO get type to be typesafe like ('svg' | 'stl' | 'other')
+  size: number;
+  dateTime: Date;
   type: string;
   description?: string;
   image?: string;

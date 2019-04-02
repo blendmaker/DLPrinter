@@ -1,4 +1,4 @@
-export interface MessageInterface {
+export interface Message {
     cmd: '' | 
         'color' | 'text' | 'heartbeat' |
         'get-settings' | 'set-settings' | 'reset-settings' |
