@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebSocketService } from 'src/app/services/web-socket.service';
-import { SessionStorageService } from 'src/app/services/session-storage.service';
+import { SessionStorageService, FilesDisplayOptions } from 'src/app/services/session-storage.service';
 import { Subscription } from 'rxjs';
-import { filter, first } from 'rxjs/operators';
+import { filter, first, groupBy, map } from 'rxjs/operators';
 import { FileMeta } from '../../../../../../../src/interfaces/FileMeta';
-import { PrinterState } from '../../../../../../../src/interfaces/PrinterState';
 import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
@@ -14,12 +13,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class FilesComponent implements OnInit, OnDestroy {
   private subscription: Subscription[] = [];
-  protected files: FileMeta[] = [];
-  protected state: PrinterState = {
-    printing: false,
-    z: 0,
-    light: false,
-  };
+  protected files: FileMeta[][] = [];
   protected optionsForm = new FormGroup({
     displaySvg: new FormControl(),
     displayStl: new FormControl(),
@@ -29,20 +23,49 @@ export class FilesComponent implements OnInit, OnDestroy {
   constructor(private ws: WebSocketService, protected sessionStorageService: SessionStorageService) { }
 
   ngOnInit() {
+    this.optionsForm.setValue({
+      displaySvg: this.sessionStorageService.filesDisplayOptions.value.displaySvg,
+      displayStl: this.sessionStorageService.filesDisplayOptions.value.displayStl,
+      displayOthers: this.sessionStorageService.filesDisplayOptions.value.displayOthers,
+      itemCount: this.sessionStorageService.filesDisplayOptions.value.itemCount,
+    });
+
     this.subscription.push(
-      this.ws.subscribe( msg => {
-        switch (msg.cmd) {
-          case 'state' : this.state = msg.data; break;
-          case 'get-files' : this.files = msg.data; break;
-        }
-      })
+      this.ws.pipe(
+        filter( msg => msg.cmd === 'get-files'),
+        map( msg => msg.data.filter( file => {
+          if ( file.type === 'svg' &&
+            !this.sessionStorageService.filesDisplayOptions.value.displaySvg) {
+            return false;
+          } else if ( file.type === 'stl' &&
+            !this.sessionStorageService.filesDisplayOptions.value.displayStl) {
+            return false;
+          } else if ( file.type === 'other' &&
+            !this.sessionStorageService.filesDisplayOptions.value.displayOthers) {
+            return false;
+          }
+          return true;
+        })),
+        map( files => files.length === 0 ? files : files.reduce( (acc, file) => {
+          if (Array.isArray(acc)) {
+            if ( acc[acc.length - 1].length === this.sessionStorageService.filesDisplayOptions.value.itemCount ) {
+              acc[acc.length] = [ file ];
+            } else {
+              acc[acc.length - 1].push(file);
+            }
+          } else if (typeof acc === 'object') {
+            acc = [ [ file ] ];
+          }
+          return acc;
+        })),
+      ).subscribe( files => this.files = files )
     );
 
     this.subscription.push(
       this.optionsForm.valueChanges.subscribe(
         formData => {
-          console.log(formData);
           this.sessionStorageService.filesDisplayOptions.next( formData );
+          this.ws.send({ cmd : 'get-files' });
         }
       )
     );

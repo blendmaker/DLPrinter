@@ -6,18 +6,17 @@
 <h1 class="mb-4">Local files and actions</h1>
 
 <form [formGroup]="optionsForm">
-  <div class="row hidden-sm-down mb-4">
-    <h3 class="mr-auto">Display options:</h3>
+  <div class="row hidden-sm-down">
+    <h3 class="col-sm">Display options:</h3>
 
     <p class="my-auto mr-1">Filetypes: </p>
-    <div class="btn-group btn-group-toggle mr-3" role="group" aria-label="Display filetypes">
+    <div class="btn-group btn-group-toggle mr-3 btn-group-sm" role="group" aria-label="Display filetypes">
       <label ngbButtonLabel class="btn-secondary">
         <input
           ngbButton
           type="checkbox"
           formControlName="displaySvg"
-          [value]="svg"
-          [checked]="sessionStorageService.filesDisplayOptions.value.displaySvg">
+          value="svg">
           SVG
       </label>
       <label ngbButtonLabel class="btn-secondary">
@@ -25,17 +24,21 @@
           ngbButton
           type="checkbox"
           formControlName="displayStl"
-          [value]="stl"
-          [checked]="sessionStorageService.filesDisplayOptions.value.displayStl">
+          value="stl">
           STL
       </label>
       <label ngbButtonLabel class="btn-secondary">
-        <input ngbButton type="checkbox" formControlName="displayOthers" [value]="others">others
+        <input
+          ngbButton
+          type="checkbox"
+          formControlName="displayOthers"
+          value="others">
+          others
       </label>
     </div>
-
+    
     <p class="my-auto mr-1">Items per row: </p>
-    <div class="btn-group btn-group-toggle" ngbRadioGroup role="group" aria-label="Display items per row">
+    <div class="btn-group btn-group-toggle btn-group-sm mr-3" ngbRadioGroup formControlName="itemCount" role="group" aria-label="Display items per row">
       <label ngbButtonLabel class="btn-secondary">
         <input ngbButton type="radio" [value]="1">1
       </label>
@@ -48,14 +51,19 @@
     </div>
   </div>
 </form>
+<hr class="mb-5">
 
-<div class="clearfix">
+<div class="row" *ngFor="let row of files">
   <app-file-card
-    *ngFor="let file of files"
+    *ngFor="let file of row"
     [data]="file"
     (print)="printFile($event)"
     (inspect)="inspectFile($event)"
     (delete)="deleteFile($event)"
-    class="col-md-4 col-sm-6">
+    class="col-sm">
   </app-file-card>
+  <!-- TODO kinda dirty to clean last row... find better approach -->
+  <div class="col-sm" *ngIf="row.length <= (sessionStorageService.filesDisplayOptions.value.itemCount - 1)"></div>
+  <div class="col-sm" *ngIf="row.length <= (sessionStorageService.filesDisplayOptions.value.itemCount - 2)"></div>
+  <div class="col-sm" *ngIf="row.length <= (sessionStorageService.filesDisplayOptions.value.itemCount - 3)"></div>
 </div>

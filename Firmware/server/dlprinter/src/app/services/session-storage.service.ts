@@ -12,7 +12,8 @@ export class FilesDisplayOptions {
     providedIn: 'root'
 })
 export class SessionStorageService {
-    public filesDisplayOptions: BehaviorSubject<FilesDisplayOptions>; // = new BehaviorSubject( new FilesDisplayOptions() );
+    public filesDisplayOptions: BehaviorSubject<FilesDisplayOptions>;
+
     constructor() {
         const filesDisplayOptions = localStorage.getItem('files-display-options');
         this.filesDisplayOptions = new BehaviorSubject(
