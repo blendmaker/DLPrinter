@@ -1,4 +1,4 @@
-import { IoStrategy } from "../interfaces/IoStrategy";
+import { IoStrategy } from "../Interfaces/IoStrategy";
 
 export class DryRunStrategy implements IoStrategy {
     name = 'Dry run';

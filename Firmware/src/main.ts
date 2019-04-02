@@ -2,12 +2,12 @@ import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import { Settings } from './Settings';
 import { PrintRunner } from './PrintRunner';
-import { FileMeta } from './interfaces/FileMeta';
+import { FileMeta } from './Interfaces/FileMeta';
 import { format as urlFormat } from 'url';
 import * as expressWs from 'express-ws';
 import * as express from 'express';
 import { IpcMainSubject } from './IpcSubjects'
-import { Message } from './interfaces/Message';
+import { Message } from './Interfaces/Message';
 import { forkJoin } from 'rxjs';
 import { unlink } from 'fs';
 

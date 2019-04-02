@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs'
 import { ipcRenderer, ipcMain } from 'electron'
-import { Message } from './interfaces/Message';
+import { Message } from './Interfaces/Message';
 
 export class IpcMainSubject extends Subject<Message> {
     constructor (private _sendFunc: (channel: string, msg: any)=>void) {

@@ -3,8 +3,8 @@ import { Builder, parseString } from 'Xml2js';
 import { existsSync, mkdirSync, readdir, readFileSync, unlink, statSync, fstat } from 'fs';
 import { parse as parsePath, join } from 'path';
 import { from, Observable, Subscriber } from 'rxjs';
-import { FileMeta } from './interfaces/FileMeta';
-import { PrinterState } from './interfaces/PrinterState';
+import { FileMeta } from './Interfaces/FileMeta';
+import { PrinterState } from './Interfaces/PrinterState';
 
 export class PrintRunner {
     private layers: string[];

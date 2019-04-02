@@ -1,4 +1,4 @@
-import { IoStrategy } from "../interfaces/IoStrategy";
+import { IoStrategy } from "../Interfaces/IoStrategy";
 
 export class SerialStrategy implements IoStrategy {
     name = 'Send serial command';
