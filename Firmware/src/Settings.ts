@@ -1,6 +1,6 @@
 import { app, remote, dialog } from 'electron';
 import { statSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { SettingsData } from './interfaces/SettingsData';
+import { SettingsData } from './Interfaces/SettingsData';
 
 export class Settings {
     private data: SettingsData;

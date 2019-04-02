@@ -1,4 +1,4 @@
-import { SettingsData } from './../../../../../../../src/interfaces/SettingsData';
+import { SettingsData } from './../../../../../../../src/Interfaces/SettingsData';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';

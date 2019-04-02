@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, isDevMode } from '@angular/core';
 import { WebSocketService } from 'src/app/services/web-socket.service';
 import { interval, Subscription } from 'rxjs';
-import { MessageInterface } from '../../../../../../../src/interfaces/MessageInterface';
+import { Message } from '../../../../../../../src/Interfaces/Message';
 
 @Component({
   selector: 'app-footer',
@@ -27,7 +27,7 @@ export class FooterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription.push(
-      this.ws.subscribe((msg: MessageInterface|string|any) => {
+      this.ws.subscribe((msg: Message) => {
         if (msg.cmd === 'state') {
           this.printerStatus = msg.data;
         }

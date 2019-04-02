@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebSocketService } from 'src/app/services/web-socket.service';
 import { SessionStorageService, FilesDisplayOptions } from 'src/app/services/session-storage.service';
 import { Subscription } from 'rxjs';
-import { filter, first, groupBy, map } from 'rxjs/operators';
+import { filter, first, map } from 'rxjs/operators';
 import { FileMeta } from '../../../../../../../src/interfaces/FileMeta';
 import { FormGroup, FormControl } from '@angular/forms';
 

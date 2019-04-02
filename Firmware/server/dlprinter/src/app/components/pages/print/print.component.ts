@@ -1,7 +1,7 @@
 import { WebSocketService } from './../../../services/web-socket.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { PrinterState } from '../../../../../../../src/interfaces/PrinterState';
+import { PrinterState } from '../../../../../../../src/Interfaces/PrinterState';
 
 @Component({
   selector: 'app-print',
