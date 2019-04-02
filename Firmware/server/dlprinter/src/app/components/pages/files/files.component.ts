@@ -17,8 +17,9 @@ export class FilesComponent implements OnInit, OnDestroy {
   protected optionsForm = new FormGroup({
     displaySvg: new FormControl(),
     displayStl: new FormControl(),
+    displayGCodes: new FormControl(),
     displayOthers: new FormControl(),
-    itemCount: new FormControl(),
+    tableDisplay: new FormControl(),
   });
   constructor(private ws: WebSocketService, protected sessionStorageService: SessionStorageService) { }
 
@@ -26,8 +27,9 @@ export class FilesComponent implements OnInit, OnDestroy {
     this.optionsForm.setValue({
       displaySvg: this.sessionStorageService.filesDisplayOptions.value.displaySvg,
       displayStl: this.sessionStorageService.filesDisplayOptions.value.displayStl,
+      displayGCodes: this.sessionStorageService.filesDisplayOptions.value.displayGCodes,
       displayOthers: this.sessionStorageService.filesDisplayOptions.value.displayOthers,
-      itemCount: this.sessionStorageService.filesDisplayOptions.value.itemCount,
+      tableDisplay: this.sessionStorageService.filesDisplayOptions.value.tableDisplay,
     });
 
     this.subscription.push(
@@ -40,25 +42,16 @@ export class FilesComponent implements OnInit, OnDestroy {
           } else if ( file.type === 'stl' &&
             !this.sessionStorageService.filesDisplayOptions.value.displayStl) {
             return false;
+          } else if ( file.type === 'gcode' &&
+            !this.sessionStorageService.filesDisplayOptions.value.displayGCodes) {
+            return false;
           } else if ( file.type === 'other' &&
             !this.sessionStorageService.filesDisplayOptions.value.displayOthers) {
             return false;
           }
           return true;
         })),
-        map( files => files.length === 0 ? files : files.reduce( (acc, file) => {
-          if (Array.isArray(acc)) {
-            if ( acc[acc.length - 1].length === this.sessionStorageService.filesDisplayOptions.value.itemCount ) {
-              acc[acc.length] = [ file ];
-            } else {
-              acc[acc.length - 1].push(file);
-            }
-          } else if (typeof acc === 'object') {
-            acc = [ [ file ] ];
-          }
-          return acc;
-        })),
-      ).subscribe( files => this.files = files )
+      ).subscribe( files => { this.files = files; console.log(files); } )
     );
 
     this.subscription.push(

@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 export class FilesDisplayOptions {
-    itemCount = 4;
+    tableDisplay = false;
     displaySvg = true;
     displayStl = true;
+    displayGCodes = true;
     displayOthers = true;
 }
 

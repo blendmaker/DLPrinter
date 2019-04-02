@@ -31,6 +31,14 @@
         <input
           ngbButton
           type="checkbox"
+          formControlName="displayGCodes"
+          value="gcodes">
+          GCodes
+      </label>
+      <label ngbButtonLabel class="btn-secondary">
+        <input
+          ngbButton
+          type="checkbox"
           formControlName="displayOthers"
           value="others">
           others
@@ -38,32 +46,27 @@
     </div>
     
     <p class="my-auto mr-1">Items per row: </p>
-    <div class="btn-group btn-group-toggle btn-group-sm mr-3" ngbRadioGroup formControlName="itemCount" role="group" aria-label="Display items per row">
+    <div class="btn-group btn-group-toggle btn-group-sm mr-3" ngbRadioGroup formControlName="tableDisplay" role="group" aria-label="Display as tiles or table">
       <label ngbButtonLabel class="btn-secondary">
-        <input ngbButton type="radio" [value]="1">1
+        <input ngbButton type="radio" [value]="true">1
       </label>
       <label ngbButtonLabel class="btn-secondary">
-        <input ngbButton type="radio" [value]="2">2
-      </label>
-      <label ngbButtonLabel class="btn-secondary">
-        <input ngbButton type="radio" [value]="4">4
+        <input ngbButton type="radio" [value]="false">2
       </label>
     </div>
   </div>
 </form>
 <hr class="mb-5">
 
-<div class="row" *ngFor="let row of files">
+<div class="row">
   <app-file-card
-    *ngFor="let file of row"
+    *ngFor="let file of files"
     [data]="file"
     (print)="printFile($event)"
     (inspect)="inspectFile($event)"
     (delete)="deleteFile($event)"
     class="col-sm">
   </app-file-card>
-  <!-- TODO kinda dirty to clean last row... find better approach -->
-  <div class="col-sm" *ngIf="row.length <= (sessionStorageService.filesDisplayOptions.value.itemCount - 1)"></div>
-  <div class="col-sm" *ngIf="row.length <= (sessionStorageService.filesDisplayOptions.value.itemCount - 2)"></div>
-  <div class="col-sm" *ngIf="row.length <= (sessionStorageService.filesDisplayOptions.value.itemCount - 3)"></div>
+  <div class="col-sm" *ngIf="files.length < 3"></div>
+  <div class="col-sm" *ngIf="files.length < 2"></div>
 </div>
