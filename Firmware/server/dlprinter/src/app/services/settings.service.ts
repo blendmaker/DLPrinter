@@ -1,9 +1,9 @@
 import { filter, first } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { WebSocketService } from './web-socket.service';
-import { SettingsData } from '../../../../../src/interfaces/SettingsData';
+import { SettingsData } from '../../../../../src/Interfaces/SettingsData';
 import { BehaviorSubject } from 'rxjs';
-import { Message } from '../../../../../src/interfaces/Message';
+import { Message } from '../../../../../src/Interfaces/Message';
 
 @Injectable({
     providedIn: 'root'

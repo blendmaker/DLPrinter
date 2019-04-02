@@ -3,8 +3,8 @@ import { WebSocketService } from 'src/app/services/web-socket.service';
 import { SessionStorageService } from 'src/app/services/session-storage.service';
 import { Subscription } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
-import { FileMeta } from '../../../../../../../src/interfaces/FileMeta';
-import { PrinterState } from '../../../../../../../src/interfaces/PrinterState';
+import { FileMeta } from '../../../../../../../src/Interfaces/FileMeta';
+import { PrinterState } from '../../../../../../../src/Interfaces/PrinterState';
 import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({

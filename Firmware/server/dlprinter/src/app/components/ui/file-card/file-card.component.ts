@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FileMeta } from '../../../../../../../src/interfaces/FileMeta';
+import { FileMeta } from '../../../../../../../src/Interfaces/FileMeta';
 
 @Component({
   selector: 'app-file-card',

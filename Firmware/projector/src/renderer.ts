@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { Settings } from '../../src/settings';
 import { IpcRendererSubject } from '../../src/IpcSubjects';
-import { Message } from '../../src/interfaces/Message';
+import { Message } from '../../src/Interfaces/Message';
 
 const settings = new Settings();
 const ipc = new IpcRendererSubject();
