@@ -41,8 +41,6 @@ function setupServer() {
             switch (msg.cmd) {
                 case 'color' :
                 case 'text' :
-                    // ipc.send(msg);
-                    // mainWindow.webContents.send('message', msg);
                     ipc.send(msg);
                     break;
                 case 'get-settings' :
