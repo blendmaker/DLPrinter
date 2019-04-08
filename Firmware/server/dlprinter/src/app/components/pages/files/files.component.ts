@@ -21,13 +21,12 @@ export class FilesComponent implements OnInit, OnDestroy {
     displayGCodes: new FormControl(),
     displayOthers: new FormControl(),
     tableDisplay: new FormControl(),
-    // filterDisplay: new FormControl(),
   });
   public filterDisplay = new BehaviorSubject<string>('');
   constructor(private ws: WebSocketService, public sessionStorageService: SessionStorageService) { }
 
   ngOnInit() {
-    this.optionsForm.patchValue({
+    this.optionsForm.setValue({
       displaySvg: this.sessionStorageService.filesDisplayOptions.value.displaySvg,
       displayStl: this.sessionStorageService.filesDisplayOptions.value.displayStl,
       displayGCodes: this.sessionStorageService.filesDisplayOptions.value.displayGCodes,
