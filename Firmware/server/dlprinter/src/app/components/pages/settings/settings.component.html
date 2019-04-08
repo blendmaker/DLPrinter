@@ -1,6 +1,6 @@
 <h1 class="mb-4">Einstellungen</h1>
 
-<form [formGroup]="form" (submit)="sendSettings()">
+<form [formGroup]="form" (submit)="sendSettings($event)">
   <ngb-tabset>
     <ngb-tab title="General">
       <ng-template ngbTabContent>

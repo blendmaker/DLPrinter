@@ -14,6 +14,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { DisconnectedDisplayComponent } from './components/ui/disconnected-display/disconnected-display.component';
 import { FileCardComponent } from './components/ui/file-card/file-card.component';
 import { DebugButtonsComponent } from './components/ui/debug-buttons/debug-buttons.component';
+import { FileListComponent } from './components/ui/file-list/file-list.component';
 
 @NgModule({
   declarations: [
@@ -26,11 +27,13 @@ import { DebugButtonsComponent } from './components/ui/debug-buttons/debug-butto
     DisconnectedDisplayComponent,
     FileCardComponent,
     DebugButtonsComponent,
+    FileListComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
+    FormsModule,
     ReactiveFormsModule,
   ],
   entryComponents: [ DisconnectedDisplayComponent ],

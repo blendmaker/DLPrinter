@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebSocketService } from 'src/app/services/web-socket.service';
-import { SessionStorageService, FilesDisplayOptions } from 'src/app/services/session-storage.service';
-import { Subscription } from 'rxjs';
-import { filter, first, map } from 'rxjs/operators';
+import { SessionStorageService } from 'src/app/services/session-storage.service';
+import { Subscription, BehaviorSubject } from 'rxjs';
+import { filter, first, map, debounce, debounceTime } from 'rxjs/operators';
 import { FileMeta } from '../../../../../../../src/Interfaces/FileMeta';
 import { FormGroup, FormControl } from '@angular/forms';
 
@@ -13,18 +13,21 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class FilesComponent implements OnInit, OnDestroy {
   private subscription: Subscription[] = [];
-  protected files: FileMeta[][] = [];
-  protected optionsForm = new FormGroup({
+  private remoteFiles: FileMeta[] = [];
+  public files: FileMeta[] = [];
+  public optionsForm = new FormGroup({
     displaySvg: new FormControl(),
     displayStl: new FormControl(),
     displayGCodes: new FormControl(),
     displayOthers: new FormControl(),
     tableDisplay: new FormControl(),
+    // filterDisplay: new FormControl(),
   });
-  constructor(private ws: WebSocketService, protected sessionStorageService: SessionStorageService) { }
+  public filterDisplay = new BehaviorSubject<string>('');
+  constructor(private ws: WebSocketService, public sessionStorageService: SessionStorageService) { }
 
   ngOnInit() {
-    this.optionsForm.setValue({
+    this.optionsForm.patchValue({
       displaySvg: this.sessionStorageService.filesDisplayOptions.value.displaySvg,
       displayStl: this.sessionStorageService.filesDisplayOptions.value.displayStl,
       displayGCodes: this.sessionStorageService.filesDisplayOptions.value.displayGCodes,
@@ -51,15 +54,24 @@ export class FilesComponent implements OnInit, OnDestroy {
           }
           return true;
         })),
-      ).subscribe( files => { this.files = files; console.log(files); } )
+      ).subscribe( files => { this.remoteFiles = files; this.filterDisplay.next(''); } )
     );
 
     this.subscription.push(
       this.optionsForm.valueChanges.subscribe(
         formData => {
-          this.sessionStorageService.filesDisplayOptions.next( formData );
+          this.sessionStorageService.filesDisplayOptions.next(formData);
           this.ws.send({ cmd : 'get-files' });
         }
+      )
+    );
+
+    this.subscription.push(
+      this.filterDisplay.subscribe( term =>
+        this.files = this.remoteFiles.filter(file =>
+          (!term) ||
+          file.name.indexOf(term) !== -1 ||
+          (file.description && file.description.indexOf(term) !== -1))
       )
     );
 
@@ -71,13 +83,13 @@ export class FilesComponent implements OnInit, OnDestroy {
     this.subscription = [];
   }
 
-  protected printFile(file: FileMeta) {
+  public processFile(file: FileMeta) {
   }
 
-  protected inspectFile(file: FileMeta) {
+  public inspectFile(file: FileMeta) {
   }
 
-  protected deleteFile(file: FileMeta) {
+  public deleteFile(file: FileMeta) {
     this.ws.send({ cmd: 'delete-file', data: file });
   }
 }

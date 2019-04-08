@@ -8,7 +8,7 @@ import { FileMeta } from '../../../../../../../src/Interfaces/FileMeta';
 })
 export class FileCardComponent {
   @Input() data: FileMeta;
-  @Output() print = new EventEmitter();
+  @Output() process = new EventEmitter();
   @Output() inspect = new EventEmitter();
   @Output() delete = new EventEmitter();
 }

@@ -1,0 +1,45 @@
+<div class="row">
+  <table class="table table-striped table-hover">
+    <thead>
+      <th></th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Date</th>
+      <th>Size</th>
+      <th class="text-right">Actions</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let file of data; let i = index">
+        <td></td>
+        <td>{{ file.name }}</td>
+        <td>{{ file.type }}</td>
+        <td>{{ file.dateTime | date }}</td>
+        <td>{{ (file.size / 1024 / 1024) | number:'1.2-2' }} MB</td>
+        <td class="text-right btn-group" role="group" aria-label="Fileactions">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="process.emit(file)"
+            [disabled]="(file.type !== 'svg' && file.type !== 'stl')"
+            ngbTooltip="{{ file.type === 'svg' ? 'Print' : file.type === 'stl' ? 'Slice' : '' }}">
+            <span class="sr-only" [innerHtml]="(file.type === 'svg' ? 'Print ' : file.type === 'stl' ? 'Slice ' : '') + file.name"></span>
+            <i class="fa" [class.fa-print]="file.type === 'svg'"  [class.fa-tasks]="file.type === 'stl' || file.type === 'gcode'"></i>
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="inspect.emit(file)" ngbTooltip="Inspect">
+            <span class="sr-only">Inspect {{ file.name }}</span>
+            <i class="fa fa-edit"></i>
+          </button>
+          <button type="button" class="btn btn-secondary" [ngbPopover]="popDeleteFile" [popoverTitle]="popDeleteFileHead" ngbTooltip="Delete">
+            <span class="sr-only">Delete {{ file.name }}</span>
+            <i class="fa fa-trash"></i>
+          </button>
+          <ng-template #popDeleteFileHead>Delete {{ file.name }}?</ng-template>
+          <ng-template #popDeleteFile>
+            <p>Are you sure you want to delete this file?</p>
+            <button type="submit" class="btn btn-danger" (click)="delete.emit(file)" >Yes</button>
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

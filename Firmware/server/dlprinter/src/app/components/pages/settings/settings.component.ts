@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit, OnDestroy {
-  protected form: FormGroup = new FormGroup({
+  public form: FormGroup = new FormGroup({
     port: new FormControl('', [ Validators.required ]),
     phys_width: new FormControl('', [ Validators.required ]),
     phys_height: new FormControl('', [ Validators.required ]),
@@ -43,12 +43,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.subscription = [];
   }
 
-  protected resetSettings($event: Event) {
+  public resetSettings($event: Event) {
     $event.preventDefault();
     this.settingsService.resetSettingsData();
   }
 
-  protected sendSettings($event: Event) {
+  public sendSettings($event: Event) {
     $event.preventDefault();
 
     // TODO handle slicer settings

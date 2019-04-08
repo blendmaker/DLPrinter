@@ -16,12 +16,12 @@
     <button
       type="button"
       class="btn btn-secondary"
-      (click)="print.emit(data)"
+      (click)="process.emit(data)"
       [disabled]="(data.type !== 'svg' && data.type !== 'stl')"
       ngbTooltip="{{ data.type === 'svg' ? 'Print' : data.type === 'stl' ? 'Slice' : '' }}">
 
         <span class="sr-only" [innerHtml]="(data.type === 'svg' ? 'Print ' : data.type === 'stl' ? 'Slice ' : '') + data.name"></span>
-        <i class="fa" [class.fa-print]="data.type === 'svg'"  [class.fa-tasks]="data.type === 'stl'"></i>
+        <i class="fa" [class.fa-print]="data.type === 'svg'"  [class.fa-tasks]="data.type === 'stl' || data.type === 'gcode'"></i>
     </button>
     <button type="button" class="btn btn-secondary" (click)="inspect.emit(data)" ngbTooltip="Inspect">
         <span class="sr-only">Inspect {{ data.name }}</span>

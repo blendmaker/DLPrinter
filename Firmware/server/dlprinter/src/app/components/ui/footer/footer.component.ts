@@ -10,15 +10,15 @@ import { Message } from '../../../../../../../src/Interfaces/Message';
 })
 export class FooterComponent implements OnInit, OnDestroy {
   private subscription: Subscription[] = [];
-  protected connected = false;
-  protected printerStatus = {
+  public connected = false;
+  public printerStatus = {
     printing : false,
     z : 0.0,
     light : false,
   };
-  protected isDebug = isDevMode;
+  public isDebug = isDevMode;
 
-  protected tooltipConnection = [
+  public tooltipConnection = [
     'You are currently connected to the printer.',
     'No connection to printer present.'
   ];
@@ -43,7 +43,7 @@ export class FooterComponent implements OnInit, OnDestroy {
     this.subscription = [];
   }
 
-  protected triggerLight() {
+  public triggerLight() {
     this.ws.send({ cmd : 'light' });
   }
 }

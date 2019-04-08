@@ -9,16 +9,16 @@ import { WebSocketService } from 'src/app/services/web-socket.service';
 export class DebugButtonsComponent {
   constructor(private ws: WebSocketService) { }
 
-  protected textClicked () {
+  public textClicked () {
     this.ws.send({ cmd: 'text', data: 'Ich in ein Test', });
   }
-  protected whiteClicked () {
+  public whiteClicked () {
     this.ws.send({ cmd: 'color', data: 'white', });
   }
-  protected blackClicked () {
+  public blackClicked () {
     this.ws.send({ cmd: 'color', data: 'black', });
   }
-  protected layerClicked () {
+  public layerClicked () {
     this.ws.send({ cmd: 'layer', data: {}, });
   }
 }

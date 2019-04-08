@@ -45,24 +45,48 @@
       </label>
     </div>
     
-    <p class="my-auto mr-1">Items per row: </p>
-    <div class="btn-group btn-group-toggle btn-group-sm mr-3" ngbRadioGroup formControlName="tableDisplay" role="group" aria-label="Display as tiles or table">
+    <p class="my-auto mr-1">Displaystyle: </p>
+    <div class="btn-group btn-group-toggle btn-group-sm mr-3" ngbRadioGroup formControlName="tableDisplay" role="group" aria-label="Displaystyle">
       <label ngbButtonLabel class="btn-secondary">
-        <input ngbButton type="radio" [value]="true"><i class="fa fa-th"></i>
+        <input ngbButton type="radio" [value]="false"><i class="fa fa-th"></i>
       </label>
       <label ngbButtonLabel class="btn-secondary">
-        <input ngbButton type="radio" [value]="false"><i class="fa fa-list"></i>
+        <input ngbButton type="radio" [value]="true"><i class="fa fa-list"></i>
       </label>
+    </div>
+
+    <p class="my-auto mr-1">Filter: </p>
+    <div class="my-auto mr-3">
+      <div class="input-group input-group-sm my-auto">
+        <input 
+          ngbInput
+          class="form-control"
+          [ngModel]="filterDisplay | async"
+          (ngModelChange)="filterDisplay.next($event)"
+          [ngModelOptions]="{standalone: true}"
+          type="text"
+          aria-label="Filter files">
+        <div class="input-group-append">
+          <span
+            class="input-group-text btn btn-secondary"
+            id="basic-addon1"
+            (click)="filterDisplay.next('')"
+            role="button"
+            aria-label="Clear filter">
+            <i class="fa" [ngClass]="filterDisplay.value ? 'fa-times' : 'fa-search'"></i>
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </form>
 <hr class="mb-5">
 
-<div class="row">
+<div class="row" *ngIf="!sessionStorageService.filesDisplayOptions.value.tableDisplay; else fileTable">
   <app-file-card
     *ngFor="let file of files"
     [data]="file"
-    (print)="printFile($event)"
+    (process)="processFile($event)"
     (inspect)="inspectFile($event)"
     (delete)="deleteFile($event)"
     class="col-sm">
@@ -70,3 +94,11 @@
   <div class="col-sm" *ngIf="files.length < 3"></div>
   <div class="col-sm" *ngIf="files.length < 2"></div>
 </div>
+<ng-template #fileTable>
+  <app-file-list
+    [data]="files"
+    (process)="processFile($event)"
+    (inspect)="inspectFile($event)"
+    (delete)="deleteFile($event)">
+  </app-file-list>
+</ng-template>
