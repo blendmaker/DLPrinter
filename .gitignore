@@ -9,3 +9,4 @@ Firmware/server/dlprinter/node_modules
 Firmware/server/Backup
 */.DS_Store
 .DS_Store
+.idea
