@@ -16,46 +16,46 @@ let pixelHeight: number;
 let pixelWidth: number;
 
 ipc.subscribe((msg: Message) => {
-    switch (msg.cmd) {
-        case 'text'  : text(msg);     break;
-        case 'color' : color(msg);    break;
-        case 'layer' : svgLayer(msg); break;
-        case 'center': center(msg);   break;
-    }
+  switch (msg.cmd) {
+    case 'text'  : text(msg);     break;
+    case 'color' : color(msg);    break;
+    case 'layer' : svgLayer(msg); break;
+    case 'center': center(msg);   break;
+  }
 });
 
 function svgLayer(msg: Message){
-    gScale.html(msg.data);
+  gScale.html(msg.data);
 }
 
 function center(msg: Message) {
-    // transform half the object size to pixel
-    const pixelPerMmX = pixelWidth/phys_width;
-    const pixelPerMmY = pixelHeight/phys_height;
-    const cX = pixelWidth/2;
-    const cY = pixelHeight/2;
-    const pX = (cX-(pixelPerMmX*(msg.data.w/2))).toFixed(3);
-    const pY = (cY-(pixelPerMmY*(msg.data.h)/2)).toFixed(3);
+  // transform half the object size to pixel
+  const pixelPerMmX = pixelWidth/phys_width;
+  const pixelPerMmY = pixelHeight/phys_height;
+  const cX = pixelWidth/2;
+  const cY = pixelHeight/2;
+  const pX = (cX-(pixelPerMmX*(msg.data.w/2))).toFixed(3);
+  const pY = (cY-(pixelPerMmY*(msg.data.h)/2)).toFixed(3);
 
-    gPos.attr('transform', "translate(" + pX + " " + pY + ")");
+  gPos.attr('transform', "translate(" + pX + " " + pY + ")");
 }
 
 function color(msg: Message){
-    svg.style('background-color', msg.data);
-    pText.style('color', msg.data === 'white' ? 'black' : 'white');
-    pText.html("");
-    gScale.html("");
+  svg.style('background-color', msg.data);
+  pText.style('color', msg.data === 'white' ? 'black' : 'white');
+  pText.html("");
+  gScale.html("");
 }
 
 function text(msg: Message){
-    pText.html(msg.data);
+  pText.html(msg.data);
 }
 
 document.addEventListener('DOMContentLoaded', function(){
-    // apply scaling
-    pixelHeight = (svg.node() as any).getBoundingClientRect().height;
-    pixelWidth = (svg.node() as any).getBoundingClientRect().width;
-    gScale.attr('transform', "scale(" + 
-        (pixelWidth/phys_width).toFixed(3) + " " + 
-        (pixelHeight/phys_height).toFixed(3) + ")");
+  // apply scaling
+  pixelHeight = (svg.node() as any).getBoundingClientRect().height;
+  pixelWidth = (svg.node() as any).getBoundingClientRect().width;
+  gScale.attr('transform', "scale(" + 
+    (pixelWidth/phys_width).toFixed(3) + " " + 
+    (pixelHeight/phys_height).toFixed(3) + ")");
 });
