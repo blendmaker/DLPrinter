@@ -7,6 +7,7 @@ Firmware/projector/dist/
 Firmware/server/dist
 Firmware/server/dlprinter/node_modules
 Firmware/server/Backup
+Firmware/server/dlprinter/package-lock.json
 */.DS_Store
 .DS_Store
 .idea
