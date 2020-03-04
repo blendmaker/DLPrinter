@@ -135,5 +135,8 @@
       }
     }
   },
-  "defaultProject": "dlprinter"
+  "defaultProject": "dlprinter",
+  "cli": {
+    "analytics": false
+  }
 }
